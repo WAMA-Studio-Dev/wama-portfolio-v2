@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #0b0b0c;
+  --accent-tinto: #7a1a24;
+  --accent-tinto-glow: rgba(122, 26, 36, 0.35);
+  --text: #fdfbf7;
+  --text-dim: rgba(253, 251, 247, 0.62);
+  --text-dimmer: rgba(253, 251, 247, 0.42);
+  --line: rgba(255, 255, 255, 0.12);
+  --line-strong: rgba(122, 26, 36, 0.4);
+  --fill-ghost: rgba(255, 255, 255, 0.04);
+  --fill-solid: rgba(122, 26, 36, 0.15);
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-tinto: var(--accent-tinto);
+  --color-tinto-glow: var(--accent-tinto-glow);
+  --color-text: var(--text);
+  --color-text-dim: var(--text-dim);
+  --color-text-dimmer: var(--text-dimmer);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fill-ghost: var(--fill-ghost);
+  --color-fill-solid: var(--fill-solid);
+  --font-sora: var(--font-sora);
+  --font-jetbrains: var(--font-jetbrains-mono);
+  --ease-premium: var(--ease-premium);
+}
+
+* {
+  border-color: var(--line);
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
+  /* CSS defensivo anti-blank: el contenido siempre es visible por defecto */
+  opacity: 1;
+}
+
+::selection {
+  background: var(--accent-tinto);
+  color: var(--text);
+}
+
+/* Red de seguridad: cualquier nodo marcado como animable por Framer Motion
+   permanece visible si el script se retrasa o falla (script tag lo desactiva). */
+.motion-safe-init {
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.font-mono-wama {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+@keyframes wama-wave {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
