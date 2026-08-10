@@ -139,7 +139,6 @@ export default function Projects() {
                     <button
                       type="button"
                       data-cursor
-                      data-cursor-label="Ver"
                       onClick={() => setActive(project)}
                       className="rounded-full border border-line px-4 py-2 font-sora text-xs font-semibold text-text-dim transition-colors duration-200 hover:border-line-strong hover:text-text"
                     >
@@ -150,7 +149,6 @@ export default function Projects() {
                       target="_blank"
                       rel="noopener noreferrer"
                       data-cursor
-                      data-cursor-label="Abrir"
                       className="flex h-9 w-9 items-center justify-center rounded-full bg-fill-solid text-text transition-colors duration-200 hover:bg-tinto"
                       aria-label={`Ver demo en vivo de ${project.name}`}
                     >
@@ -234,7 +232,6 @@ export default function Projects() {
                   target="_blank"
                   rel="noopener noreferrer"
                   data-cursor
-                  data-cursor-label="Abrir"
                   className="mt-7 inline-flex items-center gap-2 rounded-full bg-tinto px-6 py-3 font-sora text-sm font-semibold text-text transition-transform duration-200 ease-out active:scale-[0.97]"
                 >
                   Live Demo

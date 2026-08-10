@@ -54,7 +54,6 @@ export default function Navbar() {
           <a
             href="#inicio"
             data-cursor
-            data-cursor-label="Inicio"
             onClick={(e) => {
               e.preventDefault();
               handleNav("#inicio");
@@ -87,7 +86,6 @@ export default function Navbar() {
                 <a
                   href={link.href}
                   data-cursor
-                  data-cursor-label="Ir"
                   onClick={(e) => {
                     e.preventDefault();
                     handleNav(link.href);
@@ -104,7 +102,6 @@ export default function Navbar() {
             <a
               href="#contacto"
               data-cursor
-              data-cursor-label="Ir"
               onClick={(e) => {
                 e.preventDefault();
                 handleNav("#contacto");

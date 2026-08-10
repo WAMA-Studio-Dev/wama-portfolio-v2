@@ -4,9 +4,9 @@
   --bg: #0b0b0c;
   --accent-tinto: #7a1a24;
   --accent-tinto-glow: rgba(122, 26, 36, 0.35);
-  --text: #fdfbf7;
-  --text-dim: rgba(253, 251, 247, 0.62);
-  --text-dimmer: rgba(253, 251, 247, 0.42);
+  --text: #f2e9d8;
+  --text-dim: rgba(242, 233, 216, 0.62);
+  --text-dimmer: rgba(242, 233, 216, 0.42);
   --line: rgba(255, 255, 255, 0.12);
   --line-strong: rgba(122, 26, 36, 0.4);
   --fill-ghost: rgba(255, 255, 255, 0.04);
@@ -95,4 +95,19 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+@keyframes wama-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [style*="wama-marquee"] {
+    animation-duration: 60s !important;
+  }
 }

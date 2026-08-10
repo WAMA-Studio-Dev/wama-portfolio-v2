@@ -27,6 +27,7 @@ const SPRING_SIZE = {
     mass: 0.4
 };
 const QUERY = "(hover: hover) and (pointer: fine)";
+const HOVER_PADDING = 8;
 function subscribeFinePointer(callback) {
     const mql = window.matchMedia(QUERY);
     mql.addEventListener("change", callback);
@@ -50,13 +51,16 @@ function CustomCursor() {
     _s1();
     const enabled = useFinePointer();
     const [hovering, setHovering] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    const [label, setLabel] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const x = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$motion$2d$value$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMotionValue"])(-100);
     const y = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$motion$2d$value$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMotionValue"])(-100);
-    const size = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$motion$2d$value$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMotionValue"])(10);
+    const width = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$motion$2d$value$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMotionValue"])(10);
+    const height = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$motion$2d$value$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMotionValue"])(10);
+    const radius = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$motion$2d$value$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMotionValue"])(9999);
     const springX = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$spring$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSpring"])(x, SPRING);
     const springY = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$spring$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSpring"])(y, SPRING);
-    const springSize = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$spring$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSpring"])(size, SPRING_SIZE);
+    const springWidth = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$spring$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSpring"])(width, SPRING_SIZE);
+    const springHeight = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$spring$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSpring"])(height, SPRING_SIZE);
+    const springRadius = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$spring$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSpring"])(radius, SPRING_SIZE);
     const rafId = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "CustomCursor.useEffect": ()=>{
@@ -70,17 +74,20 @@ function CustomCursor() {
                             const target = e.target?.closest("[data-cursor]");
                             if (target) {
                                 const rect = target.getBoundingClientRect();
+                                const targetRadius = parseFloat(getComputedStyle(target).borderRadius);
                                 x.set(rect.left + rect.width / 2);
                                 y.set(rect.top + rect.height / 2);
-                                size.set(Math.max(rect.width, rect.height) + 24);
+                                width.set(rect.width + HOVER_PADDING);
+                                height.set(rect.height + HOVER_PADDING);
+                                radius.set(Number.isFinite(targetRadius) && targetRadius > 0 ? targetRadius + HOVER_PADDING / 2 : 9999);
                                 setHovering(true);
-                                setLabel(target.getAttribute("data-cursor-label"));
                             } else {
                                 x.set(e.clientX);
                                 y.set(e.clientY);
-                                size.set(10);
+                                width.set(10);
+                                height.set(10);
+                                radius.set(9999);
                                 setHovering(false);
-                                setLabel(null);
                             }
                         }
                     }["CustomCursor.useEffect.handleMove"]);
@@ -107,23 +114,25 @@ function CustomCursor() {
         enabled,
         x,
         y,
-        size
+        width,
+        height,
+        radius
     ]);
     if (!enabled) return null;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$react$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["motion"].div, {
         "aria-hidden": true,
-        className: "pointer-events-none fixed left-0 top-0 z-[100] flex items-center justify-center rounded-full",
+        className: "pointer-events-none fixed left-0 top-0 z-[100] flex items-center justify-center",
         style: {
             x: springX,
             y: springY,
-            width: springSize,
-            height: springSize,
+            width: springWidth,
+            height: springHeight,
+            borderRadius: springRadius,
             translateX: "-50%",
             translateY: "-50%",
-            background: hovering ? "rgba(122, 26, 36, 0.16)" : "rgba(253, 251, 247, 0.92)",
-            border: hovering ? "1px solid rgba(255,255,255,0.16)" : "none",
-            backdropFilter: hovering ? "blur(10px)" : "none",
-            boxShadow: hovering ? "inset 0 1px 0 rgba(255,255,255,0.12), 0 0 24px var(--accent-tinto-glow)" : "0 0 16px var(--accent-tinto-glow)"
+            background: hovering ? "rgba(122, 26, 36, 0.16)" : "rgba(242, 233, 216, 0.92)",
+            border: hovering ? "1px solid rgba(242, 233, 216, 0.16)" : "none",
+            boxShadow: hovering ? "inset 0 1px 0 rgba(242, 233, 216, 0.12), 0 0 24px var(--accent-tinto-glow)" : "0 0 16px var(--accent-tinto-glow)"
         },
         transition: {
             duration: 0.2,
@@ -133,36 +142,23 @@ function CustomCursor() {
                 0.3,
                 1
             ]
-        },
-        children: label && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$react$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["motion"].span, {
-            initial: {
-                opacity: 0
-            },
-            animate: {
-                opacity: 1
-            },
-            transition: {
-                duration: 0.15
-            },
-            className: "font-mono-wama text-[10px] uppercase tracking-[0.18em] text-text",
-            children: label
-        }, void 0, false, {
-            fileName: "[project]/src/components/CustomCursor.tsx",
-            lineNumber: 112,
-            columnNumber: 9
-        }, this)
+        }
     }, void 0, false, {
         fileName: "[project]/src/components/CustomCursor.tsx",
-        lineNumber: 90,
+        lineNumber: 103,
         columnNumber: 5
     }, this);
 }
-_s1(CustomCursor, "US/4aUqSqZV3C9HxTm8ZJVFGtf8=", false, function() {
+_s1(CustomCursor, "/FV+ipZnv+modR3OKjNqelKoRhk=", false, function() {
     return [
         useFinePointer,
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$motion$2d$value$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMotionValue"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$motion$2d$value$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMotionValue"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$motion$2d$value$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMotionValue"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$motion$2d$value$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMotionValue"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$motion$2d$value$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMotionValue"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$spring$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSpring"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$spring$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSpring"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$spring$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSpring"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$spring$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSpring"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$spring$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSpring"]

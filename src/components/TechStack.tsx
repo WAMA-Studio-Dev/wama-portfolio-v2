@@ -1,58 +1,106 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "motion/react";
+import type { IconType } from "react-icons";
+import {
+  SiReact,
+  SiNextdotjs,
+  SiTailwindcss,
+  SiNodedotjs,
+  SiPostgresql,
+  SiPrisma,
+  SiGit,
+  SiFigma,
+  SiVercel,
+  SiTypescript,
+  SiPython,
+  SiJavascript,
+} from "react-icons/si";
 import Reveal from "./Reveal";
 
-const CATEGORIES = [
+interface StackItem {
+  name: string;
+  icon: IconType;
+}
+
+const CATEGORIES: { title: string; items: StackItem[]; reverse?: boolean }[] = [
   {
     title: "Frontend & UI",
-    items: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
+    items: [
+      { name: "React", icon: SiReact },
+      { name: "Next.js", icon: SiNextdotjs },
+      { name: "Tailwind CSS", icon: SiTailwindcss },
+    ],
   },
   {
     title: "Backend & BDD",
-    items: ["Node.js", "Express", "PostgreSQL", "MongoDB", "Prisma"],
+    items: [
+      { name: "Node.js", icon: SiNodedotjs },
+      { name: "PostgreSQL", icon: SiPostgresql },
+      { name: "Prisma", icon: SiPrisma },
+    ],
+    reverse: true,
   },
   {
     title: "Tools & Workflow",
-    items: ["Git", "Figma", "Vercel", "Docker", "Linear"],
+    items: [
+      { name: "Git", icon: SiGit },
+      { name: "Figma", icon: SiFigma },
+      { name: "Vercel", icon: SiVercel },
+    ],
   },
   {
     title: "Lenguajes",
-    items: ["TypeScript", "Python", "C++", "JavaScript", "SQL"],
+    items: [
+      { name: "TypeScript", icon: SiTypescript },
+      { name: "Python", icon: SiPython },
+      { name: "JavaScript", icon: SiJavascript },
+    ],
+    reverse: true,
   },
 ];
 
-function WaveRow({ items }: { items: string[] }) {
-  const [hovered, setHovered] = useState<number | null>(null);
+function MarqueeRow({ items, reverse }: { items: StackItem[]; reverse?: boolean }) {
+  const track = [...items, ...items];
+  const duration = items.length * 5;
 
   return (
     <div
-      className="flex flex-wrap gap-3"
-      onMouseLeave={() => setHovered(null)}
+      className="relative overflow-hidden py-1"
+      style={{
+        maskImage:
+          "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+        WebkitMaskImage:
+          "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+      }}
     >
-      {items.map((item, i) => {
-        const distance = hovered === null ? 999 : Math.abs(i - hovered);
-        const lift = hovered === null ? 0 : Math.max(14 - distance * 5, 0);
-
-        return (
-          <motion.span
-            key={item}
-            data-cursor
-            onMouseEnter={() => setHovered(i)}
-            animate={{ transform: `translateY(${-lift}px)` }}
-            transition={{
-              type: "spring",
-              stiffness: 320,
-              damping: 18,
-              delay: hovered === null ? 0 : distance * 0.035,
-            }}
-            className="will-change-transform select-none rounded-full border border-line bg-fill-ghost px-4 py-2 font-mono-wama text-[12.5px] text-text-dim transition-colors duration-200 hover:border-line-strong hover:text-text"
-          >
-            {item}
-          </motion.span>
-        );
-      })}
+      <div
+        className="flex w-max gap-4 will-change-transform"
+        style={{
+          animation: `wama-marquee ${duration}s linear infinite`,
+          animationDirection: reverse ? "reverse" : "normal",
+        }}
+      >
+        {track.map((item, i) => {
+          const Icon = item.icon;
+          return (
+            <div
+              key={`${item.name}-${i}`}
+              data-cursor
+              className="group flex w-20 flex-shrink-0 flex-col items-center gap-2.5"
+            >
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-line bg-fill-ghost transition-colors duration-200 group-hover:border-line-strong">
+                <Icon
+                  size={24}
+                  className="text-text-dim transition-colors duration-200 group-hover:text-tinto"
+                />
+              </div>
+              <span className="whitespace-nowrap font-mono-wama text-[10px] uppercase tracking-[0.12em] text-text-dimmer">
+                {item.name}
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -73,13 +121,13 @@ export default function TechStack() {
           </p>
         </Reveal>
 
-        <div className="mt-14 grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-x-16 md:gap-y-12">
+        <div className="mt-14 flex flex-col gap-10">
           {CATEGORIES.map((cat, i) => (
             <Reveal key={cat.title} delay={i * 0.06}>
               <p className="mb-4 font-mono-wama text-[11px] uppercase tracking-[0.18em] text-tinto">
                 {cat.title}
               </p>
-              <WaveRow items={cat.items} />
+              <MarqueeRow items={cat.items} reverse={cat.reverse} />
             </Reveal>
           ))}
         </div>

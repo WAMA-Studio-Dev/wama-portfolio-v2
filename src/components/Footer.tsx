@@ -20,7 +20,6 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             data-cursor
-            data-cursor-label="Abrir"
             aria-label="Instagram de WAMA"
             className="text-text-dimmer transition-colors duration-200 hover:text-text"
           >
@@ -29,7 +28,6 @@ export default function Footer() {
           <a
             href="mailto:wamastudio.contacto@gmail.com"
             data-cursor
-            data-cursor-label="Escribir"
             aria-label="Email de WAMA"
             className="text-text-dimmer transition-colors duration-200 hover:text-text"
           >
