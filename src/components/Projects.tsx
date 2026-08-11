@@ -10,15 +10,32 @@ interface Project {
   id: string;
   name: string;
   category: string;
-  seed: string;
+  seed?: string;
+  image?: string;
   description: string;
   longDescription: string;
   stack: string[];
   demoUrl: string;
 }
 
+function projectImage(project: Project) {
+  return project.image ?? `https://picsum.photos/seed/${project.seed}/1200/750`;
+}
+
 // TODO(WAMA): sustituir seeds de picsum por capturas reales de cada proyecto entregado.
 const PROJECTS: Project[] = [
+  {
+    id: "bykanot",
+    name: "ByKanot",
+    category: "Comunidad & Danza Urbana",
+    image: "/projects/kanot/logo.png",
+    description:
+      "Sitio web para ByKanot, grupo de danza urbana y competición liderado por Ariadna y Eric.",
+    longDescription:
+      "ByKanot es el grupo de danza urbana y competición liderado por Ariadna y Eric. Diseñamos y desarrollamos su web desde cero para unificar en un mismo sitio todo su ecosistema de marca: la presentación del equipo (Kanot Krew), las temporadas de competición con galería de fotos por edición, Kodigo Klub (su comunidad/eventos), un canal de podcast propio y un sistema de inscripción a formaciones con notificación automática por email al equipo.",
+    stack: ["Next.js 16", "React 19", "Tailwind CSS", "Framer Motion"],
+    demoUrl: "https://www.bykanot.com/",
+  },
   {
     id: "nortek",
     name: "Nortek Commerce",
@@ -78,7 +95,7 @@ function BrowserFrame({ project }: { project: Project }) {
       </div>
       <div className="relative aspect-[16/10] w-full overflow-hidden">
         <Image
-          src={`https://picsum.photos/seed/${project.seed}/1200/750`}
+          src={projectImage(project)}
           alt={`Captura del proyecto ${project.name}`}
           fill
           sizes="(min-width: 768px) 50vw, 100vw"
@@ -139,18 +156,16 @@ export default function Projects() {
                     <button
                       type="button"
                       data-cursor
-                      data-cursor-label="Ver"
                       onClick={() => setActive(project)}
                       className="rounded-full border border-line px-4 py-2 font-sora text-xs font-semibold text-text-dim transition-colors duration-200 hover:border-line-strong hover:text-text"
                     >
-                      View Details
+                      Ver detalles
                     </button>
                     <a
                       href={project.demoUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       data-cursor
-                      data-cursor-label="Abrir"
                       className="flex h-9 w-9 items-center justify-center rounded-full bg-fill-solid text-text transition-colors duration-200 hover:bg-tinto"
                       aria-label={`Ver demo en vivo de ${project.name}`}
                     >
@@ -199,7 +214,7 @@ export default function Projects() {
 
               <div className="relative aspect-[16/9] w-full">
                 <Image
-                  src={`https://picsum.photos/seed/${active.seed}/1200/750`}
+                  src={projectImage(active)}
                   alt={`Captura del proyecto ${active.name}`}
                   fill
                   sizes="672px"
@@ -234,10 +249,9 @@ export default function Projects() {
                   target="_blank"
                   rel="noopener noreferrer"
                   data-cursor
-                  data-cursor-label="Abrir"
                   className="mt-7 inline-flex items-center gap-2 rounded-full bg-tinto px-6 py-3 font-sora text-sm font-semibold text-text transition-transform duration-200 ease-out active:scale-[0.97]"
                 >
-                  Live Demo
+                  Ver proyecto
                   <ArrowUpRight size={15} weight="bold" />
                 </a>
               </div>

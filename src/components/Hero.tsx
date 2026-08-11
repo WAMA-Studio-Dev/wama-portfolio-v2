@@ -39,12 +39,12 @@ export default function Hero() {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="mb-5 font-mono-wama text-[11px] uppercase tracking-[0.22em] text-text-dim"
           >
-            Web &amp; Creative Studio — @wama.lab
+            Estudio Creativo y de Desarrollo — @wama.lab
           </motion.p>
 
           <SplitText
             as="h1"
-            text="WE BUILD HIGH-PERFORMANCE WEB SYSTEMS THAT SCALE & CONVERT."
+            text="Desarrollamos webs rápidas y seguras diseñadas para hacer crecer tu negocio."
             className="font-sora text-3xl font-semibold leading-[1.08] tracking-tighter text-text sm:text-4xl lg:text-5xl xl:text-6xl"
           />
         </div>
@@ -70,7 +70,6 @@ export default function Hero() {
               <a
                 href="#contacto"
                 data-cursor
-                data-cursor-label="Ir"
                 className="group inline-flex items-center gap-2 rounded-full bg-tinto px-7 py-3.5 font-sora text-sm font-semibold text-text transition-transform duration-200 ease-out active:scale-[0.97]"
               >
                 Iniciar Proyecto
@@ -83,7 +82,6 @@ export default function Hero() {
               <a
                 href="#proyectos"
                 data-cursor
-                data-cursor-label="Ir"
                 className="inline-flex items-center gap-2 rounded-full border border-line px-7 py-3.5 font-sora text-sm font-semibold text-text-dim transition-colors duration-200 hover:border-line-strong hover:text-text"
               >
                 Ver Proyectos
@@ -110,7 +108,6 @@ export default function Hero() {
               target="_blank"
               rel="noopener noreferrer"
               data-cursor
-              data-cursor-label="Abrir"
               className="flex items-center justify-between rounded-xl border border-line bg-fill-ghost px-4 py-3.5 transition-colors duration-200 hover:border-line-strong"
             >
               <span className="flex items-center gap-3 text-sm text-text">
@@ -122,7 +119,6 @@ export default function Hero() {
             <a
               href="mailto:wamastudio.contacto@gmail.com"
               data-cursor
-              data-cursor-label="Escribir"
               className="flex items-center justify-between rounded-xl border border-line bg-fill-ghost px-4 py-3.5 transition-colors duration-200 hover:border-line-strong"
             >
               <span className="flex items-center gap-3 text-sm text-text">

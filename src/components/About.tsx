@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import {
-  GitBranch,
+  Code,
   Gauge,
   MagnifyingGlass,
   PaintBrushBroad,
@@ -10,10 +10,10 @@ import {
 import Reveal from "./Reveal";
 
 const BADGES = [
-  { icon: GitBranch, label: "Clean Architecture" },
-  { icon: Gauge, label: "60 FPS Animations" },
-  { icon: MagnifyingGlass, label: "SEO Focus" },
-  { icon: PaintBrushBroad, label: "Custom Web" },
+  { icon: Code, label: "Código a Medida" },
+  { icon: Gauge, label: "Animaciones Fluidas" },
+  { icon: MagnifyingGlass, label: "Optimizado para SEO" },
+  { icon: PaintBrushBroad, label: "Web 100% Personalizada" },
 ];
 
 export default function About() {
@@ -24,20 +24,37 @@ export default function About() {
     >
       <div className="mx-auto max-w-4xl px-6 md:px-10">
         <Reveal>
-          <h2 className="font-sora text-3xl font-semibold leading-tight tracking-tight text-text md:text-4xl">
-            Dos ingenieros informáticos. Una obsesión por el software bien
-            hecho.
+          <p className="font-mono-wama text-[11px] uppercase tracking-[0.22em] text-tinto">
+            Equipo
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.05}>
+          <h2 className="mt-4 font-sora text-4xl font-semibold tracking-tight text-text md:text-5xl">
+            WAMA <span className="italic text-text-dim">Studio</span>
           </h2>
         </Reveal>
 
-        <Reveal delay={0.08}>
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-text-dim">
-            WAMA nació de la frustración con las plantillas genéricas y el
-            código desechable. Somos dos estudiantes de Ingeniería
-            Informática que decidimos convertir esa frustración en un
-            estudio: cada proyecto se construye desde cero, con arquitectura
-            limpia, rendimiento medido y una estética que no se parece a
-            ningún generador automático.
+        <Reveal delay={0.1}>
+          <p className="mt-3 font-mono-wama text-xs uppercase tracking-[0.16em] text-text-dim">
+            Ingeniería de software · Diseño web · Dirección creativa
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.16}>
+          <p className="mt-8 max-w-2xl text-base leading-relaxed text-text-dim">
+            <span className="font-semibold text-text">
+              Somos dos ingenieros informáticos enfocados en crear software de
+              alto nivel,
+            </span>{" "}
+            ofreciendo una alternativa real a las webs prefabricadas.
+            Decidimos crear este estudio para ofrecer exactamente lo
+            contrario: cada proyecto se construye desde cero, combinando una{" "}
+            <span className="font-semibold text-text">
+              arquitectura sólida, rendimiento ultrarrápido
+            </span>{" "}
+            y una estética única que te diferenciará de tu competencia. Nada
+            de generadores automáticos; puro desarrollo a medida.
           </p>
         </Reveal>
 

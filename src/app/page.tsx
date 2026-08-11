@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import Metrics from "@/components/Metrics";
+import WhyUs from "@/components/WhyUs";
 import TechStack from "@/components/TechStack";
 import Projects from "@/components/Projects";
 import About from "@/components/About";
@@ -13,7 +13,7 @@ export default function Home() {
       <Navbar />
       <main className="flex flex-1 flex-col">
         <Hero />
-        <Metrics />
+        <WhyUs />
         <TechStack />
         <Projects />
         <About />
