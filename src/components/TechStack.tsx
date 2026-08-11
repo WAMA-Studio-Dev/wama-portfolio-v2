@@ -24,7 +24,7 @@ interface StackItem {
 
 const CATEGORIES: { title: string; items: StackItem[]; reverse?: boolean }[] = [
   {
-    title: "Frontend & UI",
+    title: "Diseño y Experiencia Visual",
     items: [
       { name: "React", icon: SiReact },
       { name: "Next.js", icon: SiNextdotjs },
@@ -32,7 +32,7 @@ const CATEGORIES: { title: string; items: StackItem[]; reverse?: boolean }[] = [
     ],
   },
   {
-    title: "Backend & BDD",
+    title: "Estructura y Bases de Datos",
     items: [
       { name: "Node.js", icon: SiNodedotjs },
       { name: "PostgreSQL", icon: SiPostgresql },
@@ -41,7 +41,7 @@ const CATEGORIES: { title: string; items: StackItem[]; reverse?: boolean }[] = [
     reverse: true,
   },
   {
-    title: "Tools & Workflow",
+    title: "Gestión y Despliegue",
     items: [
       { name: "Git", icon: SiGit },
       { name: "Figma", icon: SiFigma },
@@ -74,7 +74,7 @@ function MarqueeRow({ items, reverse }: { items: StackItem[]; reverse?: boolean 
       }}
     >
       <div
-        className="flex w-max gap-4 will-change-transform"
+        className="flex w-max will-change-transform"
         style={{
           animation: `wama-marquee ${duration}s linear infinite`,
           animationDirection: reverse ? "reverse" : "normal",
@@ -85,8 +85,7 @@ function MarqueeRow({ items, reverse }: { items: StackItem[]; reverse?: boolean 
           return (
             <div
               key={`${item.name}-${i}`}
-              data-cursor
-              className="group flex w-20 flex-shrink-0 flex-col items-center gap-2.5"
+              className="group flex w-20 flex-shrink-0 flex-col items-center gap-2.5 mr-4"
             >
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-line bg-fill-ghost transition-colors duration-200 group-hover:border-line-strong">
                 <Icon
@@ -114,21 +113,23 @@ export default function TechStack() {
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <Reveal>
           <h2 className="max-w-lg font-sora text-3xl font-semibold leading-tight tracking-tight text-text md:text-4xl">
-            El stack detrás de cada proyecto.
+            El motor detrás de tu nueva web.
           </h2>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-text-dim">
-            Herramientas probadas en producción, sin dependencias innecesarias.
+            Desarrollamos con las herramientas más sólidas del mercado para
+            garantizar que tu página sea rápida, segura y esté lista para
+            crecer contigo.
           </p>
         </Reveal>
 
-        <div className="mt-14 flex flex-col gap-10">
-          {CATEGORIES.map((cat, i) => (
-            <Reveal key={cat.title} delay={i * 0.06}>
+        <div className="mt-14 grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-x-10 md:gap-y-12">
+          {CATEGORIES.map((cat) => (
+            <div key={cat.title}>
               <p className="mb-4 font-mono-wama text-[11px] uppercase tracking-[0.18em] text-tinto">
                 {cat.title}
               </p>
               <MarqueeRow items={cat.items} reverse={cat.reverse} />
-            </Reveal>
+            </div>
           ))}
         </div>
       </div>

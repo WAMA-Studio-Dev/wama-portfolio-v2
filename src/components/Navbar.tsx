@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 const LINKS = [
   { href: "#inicio", label: "Inicio" },
-  { href: "#tech-stack", label: "Tech Stack" },
+  { href: "#tech-stack", label: "Herramientas" },
   { href: "#proyectos", label: "Proyectos" },
   { href: "#about", label: "Sobre WAMA" },
   { href: "#contacto", label: "Contacto" },
@@ -61,7 +61,7 @@ export default function Navbar() {
             className="group flex items-center gap-2"
           >
             <motion.span
-              className="relative block h-8 w-8 md:h-9 md:w-9"
+              className="relative block h-8 w-8 overflow-hidden rounded-[10px] md:h-9 md:w-9"
               style={{ perspective: 400 }}
               whileHover={{ rotateY: 180 }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -71,7 +71,7 @@ export default function Navbar() {
                 alt="WAMA"
                 fill
                 sizes="36px"
-                className="object-contain drop-shadow-[0_0_12px_rgba(122,26,36,0.45)]"
+                className="object-cover drop-shadow-[0_0_12px_rgba(122,26,36,0.45)]"
                 priority
               />
             </motion.span>

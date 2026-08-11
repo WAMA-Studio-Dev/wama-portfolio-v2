@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import {
-  GitBranch,
+  Code,
   Gauge,
   MagnifyingGlass,
   PaintBrushBroad,
@@ -10,10 +10,10 @@ import {
 import Reveal from "./Reveal";
 
 const BADGES = [
-  { icon: GitBranch, label: "Clean Architecture" },
-  { icon: Gauge, label: "60 FPS Animations" },
-  { icon: MagnifyingGlass, label: "SEO Focus" },
-  { icon: PaintBrushBroad, label: "Custom Web" },
+  { icon: Code, label: "Código a Medida" },
+  { icon: Gauge, label: "Animaciones Fluidas" },
+  { icon: MagnifyingGlass, label: "Optimizado para SEO" },
+  { icon: PaintBrushBroad, label: "Web 100% Personalizada" },
 ];
 
 export default function About() {
@@ -44,17 +44,17 @@ export default function About() {
         <Reveal delay={0.16}>
           <p className="mt-8 max-w-2xl text-base leading-relaxed text-text-dim">
             <span className="font-semibold text-text">
-              Somos dos ingenieros informáticos con una obsesión por el
-              software bien hecho.
+              Somos dos ingenieros informáticos enfocados en crear software de
+              alto nivel,
             </span>{" "}
-            WAMA nació de la frustración con las plantillas genéricas y el
-            código desechable. Somos dos estudiantes de Ingeniería
-            Informática que decidimos convertir esa frustración en un
-            estudio: cada proyecto se construye desde cero, con{" "}
+            ofreciendo una alternativa real a las webs prefabricadas.
+            Decidimos crear este estudio para ofrecer exactamente lo
+            contrario: cada proyecto se construye desde cero, combinando una{" "}
             <span className="font-semibold text-text">
-              arquitectura limpia, rendimiento medido
+              arquitectura sólida, rendimiento ultrarrápido
             </span>{" "}
-            y una estética que no se parece a ningún generador automático.
+            y una estética única que te diferenciará de tu competencia. Nada
+            de generadores automáticos; puro desarrollo a medida.
           </p>
         </Reveal>
 

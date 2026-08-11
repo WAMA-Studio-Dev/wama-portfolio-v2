@@ -39,12 +39,12 @@ export default function Hero() {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="mb-5 font-mono-wama text-[11px] uppercase tracking-[0.22em] text-text-dim"
           >
-            Web &amp; Creative Studio — @wama.lab
+            Estudio Creativo y de Desarrollo — @wama.lab
           </motion.p>
 
           <SplitText
             as="h1"
-            text="WE BUILD HIGH-PERFORMANCE WEB SYSTEMS THAT SCALE & CONVERT."
+            text="Desarrollamos webs rápidas y seguras diseñadas para hacer crecer tu negocio."
             className="font-sora text-3xl font-semibold leading-[1.08] tracking-tighter text-text sm:text-4xl lg:text-5xl xl:text-6xl"
           />
         </div>
