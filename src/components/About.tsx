@@ -1,20 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
-import {
-  Code,
-  Gauge,
-  MagnifyingGlass,
-  PaintBrushBroad,
-} from "@phosphor-icons/react/dist/ssr";
 import Reveal from "./Reveal";
-
-const BADGES = [
-  { icon: Code, label: "Código a Medida" },
-  { icon: Gauge, label: "Animaciones Fluidas" },
-  { icon: MagnifyingGlass, label: "Optimizado para SEO" },
-  { icon: PaintBrushBroad, label: "Web 100% Personalizada" },
-];
 
 export default function About() {
   return (
@@ -44,47 +30,17 @@ export default function About() {
         <Reveal delay={0.16}>
           <p className="mt-8 max-w-2xl text-base leading-relaxed text-text-dim">
             <span className="font-semibold text-text">
-              Somos dos ingenieros informáticos enfocados en crear software de
-              alto nivel,
+              Somos dos fundadores y desarrolladores jóvenes.
             </span>{" "}
-            ofreciendo una alternativa real a las webs prefabricadas.
-            Decidimos crear este estudio para ofrecer exactamente lo
-            contrario: cada proyecto se construye desde cero, combinando una{" "}
+            Nuestra juventud es nuestra ventaja:{" "}
             <span className="font-semibold text-text">
-              arquitectura sólida, rendimiento ultrarrápido
+              cercanía total, comunicación directa por WhatsApp/Slack sin
+              intermediarios,
             </span>{" "}
-            y una estética única que te diferenciará de tu competencia. Nada
-            de generadores automáticos; puro desarrollo a medida.
+            velocidad de ejecución y compromiso del 100% en cada línea de
+            código.
           </p>
         </Reveal>
-
-        <div className="mt-10 flex flex-wrap gap-3">
-          {BADGES.map((badge, i) => {
-            const Icon = badge.icon;
-            return (
-              <motion.span
-                key={badge.label}
-                data-cursor
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.6 }}
-                transition={{
-                  duration: 0.5,
-                  delay: i * 0.06,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                whileHover={{
-                  transform: "translateY(-3px)",
-                  borderColor: "var(--line-strong)",
-                }}
-                className="flex items-center gap-2 rounded-full border border-line bg-fill-ghost px-4 py-2.5 text-sm text-text-dim transition-colors duration-200"
-              >
-                <Icon size={15} className="text-tinto" />
-                {badge.label}
-              </motion.span>
-            );
-          })}
-        </div>
       </div>
     </section>
   );

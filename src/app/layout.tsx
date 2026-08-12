@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Sora, JetBrains_Mono } from "next/font/google";
 import CustomCursor from "@/components/CustomCursor";
+import ContactDrawer from "@/components/ContactDrawer";
+import { ContactDrawerProvider } from "@/lib/contact-drawer-context";
 import "./globals.css";
 
 const sora = Sora({
@@ -32,8 +34,11 @@ export default function RootLayout({
       className={`${sora.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-text overflow-x-hidden">
-        <CustomCursor />
-        {children}
+        <ContactDrawerProvider>
+          <CustomCursor />
+          {children}
+          <ContactDrawer />
+        </ContactDrawerProvider>
       </body>
     </html>
   );

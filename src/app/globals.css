@@ -111,3 +111,33 @@ body {
     animation-duration: 60s !important;
   }
 }
+
+@keyframes wama-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.wama-cursor-blink {
+  animation: wama-blink 1s step-end infinite;
+}
+
+@keyframes wama-pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+}
+
+.wama-status-pulse {
+  animation: wama-pulse-dot 1.8s ease-in-out infinite;
+}

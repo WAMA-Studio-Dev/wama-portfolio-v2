@@ -5,6 +5,10 @@ import {
   HandCoins,
   Handshake,
   ClipboardText,
+  Receipt,
+  RocketLaunch,
+  Wrench,
+  MapTrifold,
 } from "@phosphor-icons/react/dist/ssr";
 import Reveal from "./Reveal";
 
@@ -32,6 +36,29 @@ const REASONS = [
     number: "04",
     title: "Resultados",
     body: "Creamos webs rápidas, atractivas y funcionales que hacen que tu negocio se vea profesional.",
+  },
+];
+
+const PROCESS = [
+  {
+    icon: Receipt,
+    title: "Facturación y gestión oficial",
+    body: "Todo el proceso queda respaldado por facturación y gestión 100% transparente, sin acuerdos informales.",
+  },
+  {
+    icon: RocketLaunch,
+    title: "Lanzamiento sin caídas",
+    body: "Nos encargamos del despliegue y la configuración de dominio (Deploy & Domain setup) para que el lanzamiento oficial sea impecable.",
+  },
+  {
+    icon: Wrench,
+    title: "Mantenimiento bajo demanda",
+    body: "Servicio de mantenimiento y escalabilidad disponible cuando tu negocio lo necesite, sin permanencias forzadas.",
+  },
+  {
+    icon: MapTrifold,
+    title: "Claridad desde el Día 1",
+    body: "Tras aceptar la propuesta recibes el Roadmap con precios cerrados, fechas exactas y entregables finales. Cero sorpresas.",
   },
 ];
 
@@ -74,6 +101,40 @@ export default function WhyUs() {
               </Reveal>
             );
           })}
+        </div>
+
+        <div className="mt-24">
+          <Reveal>
+            <p className="font-mono-wama text-[11px] uppercase tracking-[0.22em] text-tinto">
+              Proceso de trabajo
+            </p>
+            <h3 className="mt-3 max-w-lg font-sora text-2xl font-semibold leading-tight tracking-tight text-text md:text-3xl">
+              Transparencia total, de la propuesta al mantenimiento.
+            </h3>
+          </Reveal>
+
+          <div className="mt-10 flex flex-col divide-y divide-line border-t border-line">
+            {PROCESS.map((step, i) => {
+              const Icon = step.icon;
+              return (
+                <Reveal key={step.title} delay={i * 0.06}>
+                  <div className="flex flex-col gap-3 py-6 sm:flex-row sm:items-start sm:gap-6">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-fill-solid">
+                      <Icon size={20} weight="duotone" className="text-tinto" />
+                    </div>
+                    <div>
+                      <h4 className="font-sora text-base font-semibold text-text">
+                        {step.title}
+                      </h4>
+                      <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-text-dim">
+                        {step.body}
+                      </p>
+                    </div>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

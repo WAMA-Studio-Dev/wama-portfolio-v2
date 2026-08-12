@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { X } from "@phosphor-icons/react/dist/ssr";
 import { List } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/utils";
+import { useContactDrawer } from "@/lib/contact-drawer-context";
 
 const LINKS = [
   { href: "#inicio", label: "Inicio" },
@@ -18,6 +19,7 @@ const LINKS = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { open: openContactDrawer } = useContactDrawer();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -99,17 +101,17 @@ export default function Navbar() {
           </ul>
 
           <div className="flex items-center gap-2">
-            <a
-              href="#contacto"
+            <button
+              type="button"
               data-cursor
-              onClick={(e) => {
-                e.preventDefault();
-                handleNav("#contacto");
+              onClick={() => {
+                setOpen(false);
+                openContactDrawer();
               }}
               className="hidden items-center rounded-full bg-tinto px-5 py-2.5 font-sora text-[13px] font-semibold text-text transition-transform duration-200 ease-out active:scale-[0.97] md:inline-flex"
             >
               EMPECEMOS
-            </a>
+            </button>
             <button
               type="button"
               aria-label={open ? "Cerrar menú" : "Abrir menú"}
@@ -148,19 +150,19 @@ export default function Navbar() {
                 {link.label}
               </motion.a>
             ))}
-            <motion.a
-              href="#contacto"
+            <motion.button
+              type="button"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 + LINKS.length * 0.06, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleNav("#contacto");
+              onClick={() => {
+                setOpen(false);
+                openContactDrawer();
               }}
               className="mt-4 rounded-full bg-tinto px-8 py-3 font-sora text-sm font-semibold text-text"
             >
               EMPECEMOS
-            </motion.a>
+            </motion.button>
           </motion.div>
         )}
       </AnimatePresence>

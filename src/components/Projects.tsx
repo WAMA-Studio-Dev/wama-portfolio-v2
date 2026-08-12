@@ -6,25 +6,37 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowUpRight, X } from "@phosphor-icons/react/dist/ssr";
 import Reveal from "./Reveal";
 
-interface Project {
+interface RealProject {
+  kind: "real";
   id: string;
   name: string;
   category: string;
-  seed?: string;
-  image?: string;
+  image: string;
   description: string;
   longDescription: string;
   stack: string[];
   demoUrl: string;
 }
 
-function projectImage(project: Project) {
-  return project.image ?? `https://picsum.photos/seed/${project.seed}/1200/750`;
+interface PlaceholderSlot {
+  kind: "placeholder";
+  id: string;
 }
 
-// TODO(WAMA): sustituir seeds de picsum por capturas reales de cada proyecto entregado.
-const PROJECTS: Project[] = [
+interface ComingSoonSlot {
+  kind: "coming-soon";
+  id: string;
+  title: string;
+  pulse: "green" | "amber";
+}
+
+type GridItem = RealProject | PlaceholderSlot | ComingSoonSlot;
+
+// TODO(WAMA): sustituir por el segundo proyecto real entregado (nombre,
+// categoría, capturas propias y stack) cuando esté disponible.
+const REAL_PROJECTS: RealProject[] = [
   {
+    kind: "real",
     id: "bykanot",
     name: "ByKanot",
     category: "Comunidad & Danza Urbana",
@@ -33,56 +45,30 @@ const PROJECTS: Project[] = [
       "Sitio web para ByKanot, grupo de danza urbana y competición liderado por Ariadna y Eric.",
     longDescription:
       "ByKanot es el grupo de danza urbana y competición liderado por Ariadna y Eric. Diseñamos y desarrollamos su web desde cero para unificar en un mismo sitio todo su ecosistema de marca: la presentación del equipo (Kanot Krew), las temporadas de competición con galería de fotos por edición, Kodigo Klub (su comunidad/eventos), un canal de podcast propio y un sistema de inscripción a formaciones con notificación automática por email al equipo.",
-    stack: ["Next.js 16", "React 19", "Tailwind CSS", "Framer Motion"],
+      stack: ["Next.js 16", "React 19", "Tailwind CSS", "Framer Motion"],
     demoUrl: "https://www.bykanot.com/",
-  },
-  {
-    id: "nortek",
-    name: "Nortek Commerce",
-    category: "E-Commerce",
-    seed: "wama-nortek-commerce-storefront",
-    description: "Tienda D2C con checkout propio y CMS headless.",
-    longDescription:
-      "Plataforma de e-commerce construida desde cero con Next.js y un checkout optimizado para conversión. Integración con pasarela de pago, gestión de inventario en tiempo real y panel de contenido headless para el equipo de marketing.",
-    stack: ["Next.js", "Stripe", "Sanity", "Tailwind CSS"],
-    demoUrl: "https://example.com",
-  },
-  {
-    id: "orbita",
-    name: "Órbita SaaS",
-    category: "SaaS / App Web",
-    seed: "wama-orbita-saas-dashboard",
-    description: "Dashboard de analítica en tiempo real para equipos remotos.",
-    longDescription:
-      "Producto SaaS de analítica con dashboards en tiempo real, roles de equipo y facturación por suscripción. Arquitectura orientada a componentes reutilizables y websockets para datos en vivo.",
-    stack: ["React", "Node.js", "PostgreSQL", "Framer Motion"],
-    demoUrl: "https://example.com",
-  },
-  {
-    id: "marbella",
-    name: "Marbella Realty",
-    category: "Web Corporativa",
-    seed: "wama-marbella-realty-site",
-    description: "Web institucional de alto impacto para inmobiliaria premium.",
-    longDescription:
-      "Sitio corporativo editorial para una inmobiliaria de lujo, con galería de propiedades, formulario de contacto cualificado y SEO técnico afinado para posicionamiento local.",
-    stack: ["Next.js", "TypeScript", "Tailwind CSS"],
-    demoUrl: "https://example.com",
-  },
-  {
-    id: "vantage",
-    name: "Vantage Studio",
-    category: "Portfolio / Agencia",
-    seed: "wama-vantage-studio-portfolio",
-    description: "Portafolio interactivo para estudio de diseño industrial.",
-    longDescription:
-      "Portafolio cinemático con transiciones de página fluidas y galería de proyectos en scroll horizontal, pensado para presentar trabajo de diseño industrial de forma inmersiva.",
-    stack: ["Next.js", "Framer Motion", "GSAP"],
-    demoUrl: "https://example.com",
   },
 ];
 
-function BrowserFrame({ project }: { project: Project }) {
+// TODO(WAMA): reemplazar estos 2 slots por los siguientes casos de estudio
+// reales entregados a cliente — nunca rellenar con nombres/capturas inventadas.
+const PLACEHOLDER_SLOTS: PlaceholderSlot[] = [
+  { kind: "placeholder", id: "proyecto-2" },
+  { kind: "placeholder", id: "proyecto-3" },
+];
+
+const COMING_SOON_SLOTS: ComingSoonSlot[] = [
+  { kind: "coming-soon", id: "confidencial-1", title: "Proyecto Confidencial", pulse: "green" },
+  { kind: "coming-soon", id: "confidencial-2", title: "Proyecto Confidencial", pulse: "amber" },
+];
+
+const GRID_ITEMS: GridItem[] = [
+  ...REAL_PROJECTS,
+  ...PLACEHOLDER_SLOTS,
+  ...COMING_SOON_SLOTS,
+];
+
+function BrowserFrame({ project }: { project: RealProject }) {
   return (
     <div className="overflow-hidden rounded-t-xl border border-b-0 border-line bg-[#111113]">
       <div className="flex items-center gap-1.5 border-b border-line px-3.5 py-2.5">
@@ -95,7 +81,7 @@ function BrowserFrame({ project }: { project: Project }) {
       </div>
       <div className="relative aspect-[16/10] w-full overflow-hidden">
         <Image
-          src={projectImage(project)}
+          src={project.image}
           alt={`Captura del proyecto ${project.name}`}
           fill
           sizes="(min-width: 768px) 50vw, 100vw"
@@ -106,8 +92,48 @@ function BrowserFrame({ project }: { project: Project }) {
   );
 }
 
+function PlaceholderCard() {
+  return (
+    <div className="flex h-full min-h-[280px] flex-col items-center justify-center rounded-xl border border-dashed border-line bg-transparent p-8 text-center transition-colors duration-300 hover:border-line-strong">
+      <p className="font-mono-wama text-[10.5px] uppercase tracking-[0.16em] text-text-dimmer">
+        Próximo caso de estudio
+      </p>
+      <p className="mt-2 max-w-xs font-mono-wama text-sm leading-relaxed text-text-dimmer">
+        TODO(WAMA): añadir proyecto real entregado
+      </p>
+    </div>
+  );
+}
+
+function ComingSoonCard({ slot }: { slot: ComingSoonSlot }) {
+  const dotColor = slot.pulse === "green" ? "bg-emerald-400" : "bg-amber-400";
+  return (
+    <div className="relative flex h-full min-h-[280px] flex-col justify-between overflow-hidden rounded-xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-xl">
+      <div className="flex items-center gap-2">
+        <span className="relative flex h-2 w-2">
+          <span
+            className={`wama-status-pulse absolute inline-flex h-full w-full rounded-full ${dotColor}`}
+          />
+        </span>
+        <span className="font-mono-wama text-[10.5px] uppercase tracking-[0.16em] text-text-dim">
+          En desarrollo
+        </span>
+      </div>
+
+      <div>
+        <p className="font-sora text-lg font-semibold text-text">
+          {slot.title}
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-text-dim">
+          En desarrollo para cliente confidencial.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function Projects() {
-  const [active, setActive] = useState<Project | null>(null);
+  const [active, setActive] = useState<RealProject | null>(null);
 
   useEffect(() => {
     if (!active) return;
@@ -139,41 +165,45 @@ export default function Projects() {
         </Reveal>
 
         <div className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-2">
-          {PROJECTS.map((project, i) => (
-            <Reveal key={project.id} delay={i * 0.07}>
-              <div className="group overflow-hidden rounded-xl border border-line bg-fill-ghost transition-colors duration-300 hover:border-line-strong">
-                <BrowserFrame project={project} />
-                <div className="flex items-center justify-between gap-4 p-5">
-                  <div>
-                    <p className="font-mono-wama text-[10.5px] uppercase tracking-[0.16em] text-tinto">
-                      {project.category}
-                    </p>
-                    <p className="mt-1.5 font-sora text-base font-semibold text-text">
-                      {project.name}
-                    </p>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-2">
-                    <button
-                      type="button"
-                      data-cursor
-                      onClick={() => setActive(project)}
-                      className="rounded-full border border-line px-4 py-2 font-sora text-xs font-semibold text-text-dim transition-colors duration-200 hover:border-line-strong hover:text-text"
-                    >
-                      Ver detalles
-                    </button>
-                    <a
-                      href={project.demoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      data-cursor
-                      className="flex h-9 w-9 items-center justify-center rounded-full bg-fill-solid text-text transition-colors duration-200 hover:bg-tinto"
-                      aria-label={`Ver demo en vivo de ${project.name}`}
-                    >
-                      <ArrowUpRight size={15} weight="bold" />
-                    </a>
+          {GRID_ITEMS.map((item, i) => (
+            <Reveal key={item.id} delay={i * 0.07}>
+              {item.kind === "real" && (
+                <div className="group overflow-hidden rounded-xl border border-line bg-fill-ghost transition-colors duration-300 hover:border-line-strong">
+                  <BrowserFrame project={item} />
+                  <div className="flex items-center justify-between gap-4 p-5">
+                    <div>
+                      <p className="font-mono-wama text-[10.5px] uppercase tracking-[0.16em] text-tinto">
+                        {item.category}
+                      </p>
+                      <p className="mt-1.5 font-sora text-base font-semibold text-text">
+                        {item.name}
+                      </p>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-2">
+                      <button
+                        type="button"
+                        data-cursor
+                        onClick={() => setActive(item)}
+                        className="rounded-full border border-line px-4 py-2 font-sora text-xs font-semibold text-text-dim transition-colors duration-200 hover:border-line-strong hover:text-text"
+                      >
+                        Ver detalles
+                      </button>
+                      <a
+                        href={item.demoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-cursor
+                        className="flex h-9 w-9 items-center justify-center rounded-full bg-fill-solid text-text transition-colors duration-200 hover:bg-tinto"
+                        aria-label={`Ver demo en vivo de ${item.name}`}
+                      >
+                        <ArrowUpRight size={15} weight="bold" />
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
+              {item.kind === "placeholder" && <PlaceholderCard />}
+              {item.kind === "coming-soon" && <ComingSoonCard slot={item} />}
             </Reveal>
           ))}
         </div>
@@ -214,7 +244,7 @@ export default function Projects() {
 
               <div className="relative aspect-[16/9] w-full">
                 <Image
-                  src={projectImage(active)}
+                  src={active.image}
                   alt={`Captura del proyecto ${active.name}`}
                   fill
                   sizes="672px"

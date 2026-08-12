@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { motion, useMotionValue, useSpring } from "motion/react";
 
-const SPRING = { stiffness: 340, damping: 28, mass: 0.5 };
+const SPRING = { stiffness: 500, damping: 35, mass: 0.5 };
 const SPRING_SIZE = { stiffness: 300, damping: 24, mass: 0.4 };
 const QUERY = "(hover: hover) and (pointer: fine)";
 const HOVER_PADDING = 8;
