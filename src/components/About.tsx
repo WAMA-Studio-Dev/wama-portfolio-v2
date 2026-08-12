@@ -10,8 +10,8 @@ export default function About() {
       id="about"
       className="relative border-t border-line bg-bg py-24 md:py-32"
     >
-      <div className="mx-auto max-w-5xl px-6 md:px-10">
-        <div className="md:grid md:grid-cols-[1fr_auto] md:items-center md:gap-16">
+      <div className="mx-auto max-w-6xl px-6 md:px-10">
+        <div className="md:grid md:grid-cols-[1.15fr_1fr] md:items-stretch md:gap-16">
           <div>
             <Reveal>
               <p className="font-mono-wama text-[11px] uppercase tracking-[0.22em] text-tinto">
