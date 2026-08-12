@@ -37,6 +37,10 @@ export default function Navbar() {
 
   const handleNav = (href: string) => {
     setOpen(false);
+    if (href === "#contacto") {
+      openContactDrawer();
+      return;
+    }
     const el = document.querySelector(href);
     el?.scrollIntoView({ behavior: "smooth" });
   };

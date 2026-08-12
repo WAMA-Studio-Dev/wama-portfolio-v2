@@ -1,30 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "motion/react";
+import { useFinePointer } from "@/lib/use-fine-pointer";
 
-const SPRING = { stiffness: 500, damping: 35, mass: 0.5 };
-const SPRING_SIZE = { stiffness: 300, damping: 24, mass: 0.4 };
-const QUERY = "(hover: hover) and (pointer: fine)";
+const SPRING = { stiffness: 900, damping: 40, mass: 0.4 };
+const SPRING_SIZE = { stiffness: 400, damping: 28, mass: 0.3 };
 const HOVER_PADDING = 8;
-
-function subscribeFinePointer(callback: () => void) {
-  const mql = window.matchMedia(QUERY);
-  mql.addEventListener("change", callback);
-  return () => mql.removeEventListener("change", callback);
-}
-
-function getFinePointerSnapshot() {
-  return window.matchMedia(QUERY).matches;
-}
-
-function useFinePointer() {
-  return useSyncExternalStore(
-    subscribeFinePointer,
-    getFinePointerSnapshot,
-    () => false
-  );
-}
 
 export default function CustomCursor() {
   const enabled = useFinePointer();

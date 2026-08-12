@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowUpRight, X } from "@phosphor-icons/react/dist/ssr";
+import { ArrowUpRight, Eye, PlayCircle, Code, X } from "@phosphor-icons/react/dist/ssr";
+import { cn } from "@/lib/utils";
 import Reveal from "./Reveal";
+import CmdTypewriter from "./CmdTypewriter";
 
 interface RealProject {
   kind: "real";
@@ -16,21 +18,17 @@ interface RealProject {
   longDescription: string;
   stack: string[];
   demoUrl: string;
-}
-
-interface PlaceholderSlot {
-  kind: "placeholder";
-  id: string;
+  /** Solo se define para proyectos con repositorio público (poco frecuente:
+   * el código de cliente permanece privado por defecto). */
+  codeUrl?: string;
 }
 
 interface ComingSoonSlot {
   kind: "coming-soon";
   id: string;
-  title: string;
-  pulse: "green" | "amber";
 }
 
-type GridItem = RealProject | PlaceholderSlot | ComingSoonSlot;
+type GridItem = RealProject | ComingSoonSlot;
 
 // TODO(WAMA): sustituir por el segundo proyecto real entregado (nombre,
 // categoría, capturas propias y stack) cuando esté disponible.
@@ -50,83 +48,43 @@ const REAL_PROJECTS: RealProject[] = [
   },
 ];
 
-// TODO(WAMA): reemplazar estos 2 slots por los siguientes casos de estudio
-// reales entregados a cliente — nunca rellenar con nombres/capturas inventadas.
-const PLACEHOLDER_SLOTS: PlaceholderSlot[] = [
-  { kind: "placeholder", id: "proyecto-2" },
-  { kind: "placeholder", id: "proyecto-3" },
-];
-
 const COMING_SOON_SLOTS: ComingSoonSlot[] = [
-  { kind: "coming-soon", id: "confidencial-1", title: "Proyecto Confidencial", pulse: "green" },
-  { kind: "coming-soon", id: "confidencial-2", title: "Proyecto Confidencial", pulse: "amber" },
+  { kind: "coming-soon", id: "confidencial-1" },
+  { kind: "coming-soon", id: "confidencial-2" },
 ];
 
-const GRID_ITEMS: GridItem[] = [
-  ...REAL_PROJECTS,
-  ...PLACEHOLDER_SLOTS,
-  ...COMING_SOON_SLOTS,
-];
+const GRID_ITEMS: GridItem[] = [...REAL_PROJECTS, ...COMING_SOON_SLOTS];
 
-function BrowserFrame({ project }: { project: RealProject }) {
+const CARD_BUTTON_CLASS =
+  "inline-flex items-center gap-1.5 rounded-lg border border-line px-3.5 py-2 font-sora text-xs font-semibold text-text-dim transition-colors duration-200 hover:border-line-strong hover:text-text";
+
+/**
+ * Misma estructura de caja que la tarjeta de proyecto real (bloque
+ * aspect-video + bloque p-5) para que la altura coincida exactamente en
+ * cualquier tamaño de pantalla, sin necesidad de valores mágicos.
+ */
+function ComingSoonCard() {
   return (
-    <div className="overflow-hidden rounded-t-xl border border-b-0 border-line bg-[#111113]">
-      <div className="flex items-center gap-1.5 border-b border-line px-3.5 py-2.5">
-        <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-        <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-        <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-        <span className="ml-2 flex-1 truncate rounded-full bg-white/[0.06] px-3 py-1 text-center font-mono-wama text-[10px] text-text-dimmer">
-          {project.demoUrl.replace("https://", "")}
-        </span>
-      </div>
-      <div className="relative aspect-[16/10] w-full overflow-hidden">
-        <Image
-          src={project.image}
-          alt={`Captura del proyecto ${project.name}`}
-          fill
-          sizes="(min-width: 768px) 50vw, 100vw"
-          className="object-cover"
+    <div className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.04] backdrop-blur-xl">
+      <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden px-4">
+        <CmdTypewriter
+          text="PRÓXIMAMENTE"
+          speed={90}
+          loop
+          showPrefix={false}
+          className="text-center font-mono-wama text-2xl uppercase tracking-[0.1em] text-tinto sm:text-3xl sm:tracking-[0.14em] md:text-4xl md:tracking-[0.18em]"
         />
       </div>
-    </div>
-  );
-}
-
-function PlaceholderCard() {
-  return (
-    <div className="flex h-full min-h-[280px] flex-col items-center justify-center rounded-xl border border-dashed border-line bg-transparent p-8 text-center transition-colors duration-300 hover:border-line-strong">
-      <p className="font-mono-wama text-[10.5px] uppercase tracking-[0.16em] text-text-dimmer">
-        Próximo caso de estudio
-      </p>
-      <p className="mt-2 max-w-xs font-mono-wama text-sm leading-relaxed text-text-dimmer">
-        TODO(WAMA): añadir proyecto real entregado
-      </p>
-    </div>
-  );
-}
-
-function ComingSoonCard({ slot }: { slot: ComingSoonSlot }) {
-  const dotColor = slot.pulse === "green" ? "bg-emerald-400" : "bg-amber-400";
-  return (
-    <div className="relative flex h-full min-h-[280px] flex-col justify-between overflow-hidden rounded-xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-xl">
-      <div className="flex items-center gap-2">
-        <span className="relative flex h-2 w-2">
-          <span
-            className={`wama-status-pulse absolute inline-flex h-full w-full rounded-full ${dotColor}`}
-          />
-        </span>
-        <span className="font-mono-wama text-[10.5px] uppercase tracking-[0.16em] text-text-dim">
-          En desarrollo
-        </span>
-      </div>
-
-      <div>
-        <p className="font-sora text-lg font-semibold text-text">
-          {slot.title}
+      <div className="p-5">
+        <p aria-hidden className="invisible font-mono-wama text-[10.5px] uppercase tracking-[0.16em]">
+          &nbsp;
         </p>
-        <p className="mt-2 text-sm leading-relaxed text-text-dim">
-          En desarrollo para cliente confidencial.
+        <p aria-hidden className="invisible mt-1.5 font-sora text-base font-semibold">
+          &nbsp;
         </p>
+        <div aria-hidden className="mt-4 flex flex-wrap gap-2">
+          <span className={cn(CARD_BUTTON_CLASS, "invisible")}>&nbsp;</span>
+        </div>
       </div>
     </div>
   );
@@ -169,23 +127,31 @@ export default function Projects() {
             <Reveal key={item.id} delay={i * 0.07}>
               {item.kind === "real" && (
                 <div className="group overflow-hidden rounded-xl border border-line bg-fill-ghost transition-colors duration-300 hover:border-line-strong">
-                  <BrowserFrame project={item} />
-                  <div className="flex items-center justify-between gap-4 p-5">
-                    <div>
-                      <p className="font-mono-wama text-[10.5px] uppercase tracking-[0.16em] text-tinto">
-                        {item.category}
-                      </p>
-                      <p className="mt-1.5 font-sora text-base font-semibold text-text">
-                        {item.name}
-                      </p>
-                    </div>
-                    <div className="flex shrink-0 items-center gap-2">
+                  <div className="relative aspect-video w-full overflow-hidden bg-[#111113]">
+                    <Image
+                      src={item.image}
+                      alt={`Captura del proyecto ${item.name}`}
+                      fill
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                    />
+                  </div>
+                  <div className="p-5">
+                    <p className="font-mono-wama text-[10.5px] uppercase tracking-[0.16em] text-tinto">
+                      {item.category}
+                    </p>
+                    <p className="mt-1.5 font-sora text-base font-semibold text-text">
+                      {item.name}
+                    </p>
+
+                    <div className="mt-4 flex flex-wrap gap-2">
                       <button
                         type="button"
                         data-cursor
                         onClick={() => setActive(item)}
-                        className="rounded-full border border-line px-4 py-2 font-sora text-xs font-semibold text-text-dim transition-colors duration-200 hover:border-line-strong hover:text-text"
+                        className={CARD_BUTTON_CLASS}
                       >
+                        <Eye size={14} weight="bold" />
                         Ver detalles
                       </button>
                       <a
@@ -193,17 +159,28 @@ export default function Projects() {
                         target="_blank"
                         rel="noopener noreferrer"
                         data-cursor
-                        className="flex h-9 w-9 items-center justify-center rounded-full bg-fill-solid text-text transition-colors duration-200 hover:bg-tinto"
-                        aria-label={`Ver demo en vivo de ${item.name}`}
+                        className={CARD_BUTTON_CLASS}
                       >
-                        <ArrowUpRight size={15} weight="bold" />
+                        <PlayCircle size={14} weight="bold" />
+                        Demo
                       </a>
+                      {item.codeUrl && (
+                        <a
+                          href={item.codeUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          data-cursor
+                          className={CARD_BUTTON_CLASS}
+                        >
+                          <Code size={14} weight="bold" />
+                          Code
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>
               )}
-              {item.kind === "placeholder" && <PlaceholderCard />}
-              {item.kind === "coming-soon" && <ComingSoonCard slot={item} />}
+              {item.kind === "coming-soon" && <ComingSoonCard />}
             </Reveal>
           ))}
         </div>

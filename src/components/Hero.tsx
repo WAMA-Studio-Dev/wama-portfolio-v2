@@ -8,7 +8,6 @@ import {
   useReducedMotion,
 } from "motion/react";
 import { ArrowUpRight, InstagramLogo, EnvelopeSimple } from "@phosphor-icons/react/dist/ssr";
-import SplitText from "./SplitText";
 import CmdTypewriter from "./CmdTypewriter";
 import { useContactDrawer } from "@/lib/contact-drawer-context";
 
@@ -83,12 +82,12 @@ export default function Hero() {
 
         <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 gap-10 px-6 pt-24 pb-16 md:px-10 md:pt-24">
           <div>
-            <p className="mb-5 font-mono-wama text-[11px] uppercase tracking-[0.22em] text-text-dim">
-              <CmdTypewriter text='init_proyecto.sh --cliente="tu-marca" --stack=nextjs' />
-            </p>
-
-            <SplitText
+            <CmdTypewriter
               as="h1"
+              showPrefix={false}
+              wordHover
+              loop
+              speed={28}
               text="Desarrollamos webs rápidas y seguras diseñadas para hacer crecer tu negocio."
               className="font-sora text-3xl font-semibold leading-[1.08] tracking-tighter text-text sm:text-4xl lg:text-5xl xl:text-6xl"
             />

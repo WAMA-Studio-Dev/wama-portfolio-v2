@@ -4,7 +4,6 @@ import WhyUs from "@/components/WhyUs";
 import TechStack from "@/components/TechStack";
 import Projects from "@/components/Projects";
 import About from "@/components/About";
-import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -17,7 +16,6 @@ export default function Home() {
         <TechStack />
         <Projects />
         <About />
-        <Contact />
       </main>
       <Footer />
     </div>
