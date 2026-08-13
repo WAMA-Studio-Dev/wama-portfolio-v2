@@ -68,6 +68,7 @@ export default function ContactDrawer() {
       instagram: "",
       sector: SECTORS[0],
       message: "",
+      consent: false,
     },
   });
 
@@ -311,6 +312,38 @@ export default function ContactDrawer() {
                     {errors.message && (
                       <p className="mt-1.5 text-xs text-red-400">
                         {errors.message.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="consent"
+                      className="flex cursor-pointer items-start gap-3 text-xs leading-relaxed text-text-dim"
+                    >
+                      <input
+                        id="consent"
+                        type="checkbox"
+                        {...register("consent")}
+                        className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-line bg-transparent accent-tinto"
+                      />
+                      <span>
+                        He leído y acepto la{" "}
+                        <a
+                          href="/politica-de-privacidad"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          data-cursor
+                          className="text-text underline decoration-line-strong underline-offset-2 transition-colors duration-200 hover:text-tinto"
+                        >
+                          Política de Privacidad
+                        </a>
+                        .
+                      </span>
+                    </label>
+                    {errors.consent && (
+                      <p className="mt-1.5 text-xs text-red-400">
+                        {errors.consent.message}
                       </p>
                     )}
                   </div>

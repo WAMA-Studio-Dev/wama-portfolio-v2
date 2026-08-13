@@ -133,16 +133,40 @@ export default function CmdTypewriter({
     </>
   );
 
+  /**
+   * Anti-CLS: "ghost" invisible con el texto completo apilado (grid-area)
+   * detrás del texto animado. Reserva el ancho/alto máximo del bloque para
+   * que escribir/borrar en bucle nunca empuje el resto del layout.
+   */
+  const ghost = (
+    <span aria-hidden className="invisible [grid-area:1/1]">
+      {showPrefix && <span className="mr-2">&gt;_</span>}
+      {text}
+    </span>
+  );
+  const typed = <span className="[grid-area:1/1]">{content}</span>;
+
   if (as === "h1") {
-    return <h1 className={className}>{content}</h1>;
+    return (
+      <h1 className={cn("grid", className)}>
+        {ghost}
+        {typed}
+      </h1>
+    );
   }
   if (as === "h2") {
-    return <h2 className={className}>{content}</h2>;
+    return (
+      <h2 className={cn("grid", className)}>
+        {ghost}
+        {typed}
+      </h2>
+    );
   }
 
   return (
-    <span className={cn("inline-flex items-baseline", className)}>
-      {content}
+    <span className={cn("inline-grid items-baseline", className)}>
+      {ghost}
+      {typed}
     </span>
   );
 }

@@ -69,7 +69,7 @@ export default function About() {
             </Reveal>
           </div>
 
-          <Reveal delay={0.2} className="mt-10 md:mt-0">
+          <Reveal delay={0.2} className="mt-10 h-full md:mt-0">
             <RollingLogo />
           </Reveal>
         </div>

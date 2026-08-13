@@ -1,10 +1,13 @@
 import { z } from "zod";
 
 export const SECTORS = [
-  "Restauración",
-  "E-commerce",
+  "Restauración / Hostelería",
+  "Clínicas / Salud y Bienestar",
+  "Peluquerías / Estética",
+  "Tiendas / E-commerce",
   "Servicios Profesionales",
-  "Moda/Retail",
+  "Moda / Retail",
+  "Inmobiliaria",
   "Otro",
 ] as const;
 
@@ -22,6 +25,9 @@ export const contactSchema = z.object({
     .string()
     .trim()
     .min(10, "Cuéntanos un poco más sobre el proyecto"),
+  consent: z.boolean().refine((val) => val === true, {
+    message: "Debes aceptar la Política de Privacidad para continuar",
+  }),
 });
 
 export type ContactFormValues = z.infer<typeof contactSchema>;

@@ -1,12 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import {
-  AnimatePresence,
-  motion,
-  useScroll,
-  useReducedMotion,
-} from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   Star,
   HandCoins,
@@ -20,7 +15,6 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/utils";
 import Reveal from "./Reveal";
-import { useFinePointer } from "@/lib/use-fine-pointer";
 import { useElementSize } from "@/lib/use-element-size";
 
 const REASONS = [
@@ -119,7 +113,7 @@ function FloatingChip({
       data-cursor
       aria-label={`${reason.title} — ver más`}
       onClick={onToggle}
-      className="absolute left-1/2 top-1/2 -ml-8 -mt-8 flex h-16 w-16 items-center justify-center rounded-2xl border border-line bg-fill-ghost transition-colors duration-200 hover:border-line-strong sm:-ml-9 sm:-mt-9 sm:h-[72px] sm:w-[72px]"
+      className="absolute left-1/2 top-1/2 -ml-6 -mt-6 flex h-12 w-12 items-center justify-center rounded-2xl border border-line bg-fill-ghost transition-colors duration-200 hover:border-line-strong sm:-ml-8 sm:-mt-8 sm:h-16 sm:w-16 md:-ml-9 md:-mt-9 md:h-[72px] md:w-[72px]"
       style={{ willChange: "transform" }}
       animate={
         floatingEnabled
@@ -136,19 +130,21 @@ function FloatingChip({
       }}
       whileTap={{ scale: 0.94 }}
     >
-      <Icon size={24} weight="duotone" className="text-tinto" />
+      <Icon size={20} weight="duotone" className="text-tinto sm:hidden" />
+      <Icon size={24} weight="duotone" className="hidden text-tinto sm:block" />
     </motion.button>
   );
 }
 
 function FloatingReasons() {
-  const finePointer = useFinePointer();
   const reduce = useReducedMotion();
   const [expanded, setExpanded] = useState<number | null>(null);
   const arenaRef = useRef<HTMLDivElement>(null);
   const bounds = useElementSize(arenaRef);
 
-  const floatingEnabled = finePointer && !reduce;
+  // Misma lógica flotante en desktop y móvil/táctil (solo se desactiva por
+  // accesibilidad si el usuario pide "reduced motion").
+  const floatingEnabled = !reduce;
   const active = expanded !== null ? REASONS[expanded] : null;
   const ActiveIcon = active?.icon;
 
@@ -158,7 +154,7 @@ function FloatingReasons() {
         Pulsa un icono para ver más
       </p>
 
-      <div ref={arenaRef} className="relative h-[380px] sm:h-[460px]">
+      <div ref={arenaRef} className="relative h-[320px] w-full overflow-hidden sm:h-[420px] md:h-[460px]">
         {REASONS.map((reason, i) => (
           <FloatingChip
             key={reason.title}
@@ -219,108 +215,65 @@ function FloatingReasons() {
 }
 
 function ProcessRoadmap() {
-  const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
-
-  const { scrollXProgress } = useScroll({ container: trackRef });
   const ActiveIcon = PROCESS[active].icon;
 
   return (
-    <div className="relative mt-10">
-      {/* Desktop: stepper con panel central */}
-      <div className="hidden lg:block">
-        <div className="relative">
-          <div className="absolute left-[28px] right-[28px] top-7 h-px bg-line" />
+    <div className="relative mx-auto mt-10 w-full max-w-[calc(100vw-2rem)] sm:max-w-none">
+      <div className="relative">
+        <div className="absolute left-[22px] right-[22px] top-[22px] h-px bg-line sm:left-7 sm:right-7 sm:top-7" />
 
-          <div className="relative flex items-center justify-between">
-            {PROCESS.map((step, i) => (
-              <button
-                key={step.title}
-                type="button"
-                data-cursor
-                aria-pressed={active === i}
-                aria-label={`Paso ${i + 1}: ${step.title}`}
-                onClick={() => setActive(i)}
-                className={cn(
-                  "relative z-10 flex h-14 w-14 items-center justify-center rounded-full border-2 font-mono-wama text-sm transition-all duration-300",
-                  active === i
-                    ? "border-tinto bg-tinto text-text shadow-[0_0_0_6px_var(--accent-tinto-glow)]"
-                    : "border-line bg-bg text-text-dim hover:border-line-strong"
-                )}
-              >
-                {String(i + 1).padStart(2, "0")}
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-6 h-1 w-full overflow-hidden rounded-full bg-line">
-            <motion.div
-              animate={{ scaleX: (active + 1) / PROCESS.length }}
-              transition={{ type: "spring", stiffness: 260, damping: 30 }}
-              style={{ transformOrigin: "left", willChange: "transform" }}
-              className="h-full w-full bg-tinto"
-            />
-          </div>
-
-          <div className="relative mt-12 flex min-h-[150px] items-start justify-center text-center">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={active}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -14 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="flex max-w-md flex-col items-center"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-fill-solid">
-                  <ActiveIcon size={22} weight="duotone" className="text-tinto" />
-                </div>
-                <h4 className="mt-4 font-sora text-lg font-semibold text-text">
-                  {PROCESS[active].title}
-                </h4>
-                <p className="mt-2 text-sm leading-relaxed text-text-dim">
-                  {PROCESS[active].body}
-                </p>
-              </motion.div>
-            </AnimatePresence>
-          </div>
+        <div className="relative flex items-center justify-between">
+          {PROCESS.map((step, i) => (
+            <button
+              key={step.title}
+              type="button"
+              data-cursor
+              aria-pressed={active === i}
+              aria-label={`Paso ${i + 1}: ${step.title}`}
+              onClick={() => setActive(i)}
+              className={cn(
+                "relative z-10 flex h-11 w-11 items-center justify-center rounded-full border-2 font-mono-wama text-xs transition-all duration-300 sm:h-14 sm:w-14 sm:text-sm",
+                active === i
+                  ? "border-tinto bg-tinto text-text shadow-[0_0_0_6px_var(--accent-tinto-glow)]"
+                  : "border-line bg-bg text-text-dim hover:border-line-strong"
+              )}
+            >
+              {String(i + 1).padStart(2, "0")}
+            </button>
+          ))}
         </div>
-      </div>
 
-      {/* Mobile / tablet: carrusel horizontal con scroll-snap */}
-      <div className="lg:hidden">
-        <div
-          ref={trackRef}
-          className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2"
-        >
-          {PROCESS.map((step, i) => {
-            const Icon = step.icon;
-            return (
-              <div
-                key={step.title}
-                className="flex w-[78%] shrink-0 snap-start flex-col rounded-2xl border border-line bg-fill-ghost p-6 sm:w-[45%]"
-              >
-                <span className="font-mono-wama text-xs text-tinto">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div className="mt-3 flex h-11 w-11 items-center justify-center rounded-xl bg-fill-solid">
-                  <Icon size={20} weight="duotone" className="text-tinto" />
-                </div>
-                <h4 className="mt-4 font-sora text-base font-semibold text-text">
-                  {step.title}
-                </h4>
-                <p className="mt-2 text-sm leading-relaxed text-text-dim">
-                  {step.body}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-        <div className="mt-4 h-1 w-full overflow-hidden rounded-full bg-line">
+        <div className="mt-6 h-1 w-full overflow-hidden rounded-full bg-line">
           <motion.div
-            style={{ scaleX: scrollXProgress, transformOrigin: "left" }}
+            animate={{ scaleX: (active + 1) / PROCESS.length }}
+            transition={{ type: "spring", stiffness: 260, damping: 30 }}
+            style={{ transformOrigin: "left", willChange: "transform" }}
             className="h-full w-full bg-tinto"
           />
+        </div>
+
+        <div className="relative mt-10 flex min-h-[190px] items-start justify-center px-2 text-center sm:mt-12 sm:min-h-[150px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={active}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -14 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="flex w-full max-w-md flex-col items-center"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-fill-solid">
+                <ActiveIcon size={22} weight="duotone" className="text-tinto" />
+              </div>
+              <h4 className="mt-4 font-sora text-base font-semibold text-text sm:text-lg">
+                {PROCESS[active].title}
+              </h4>
+              <p className="mt-2 text-sm leading-relaxed text-text-dim">
+                {PROCESS[active].body}
+              </p>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </div>

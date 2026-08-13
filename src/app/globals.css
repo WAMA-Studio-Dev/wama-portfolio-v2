@@ -63,6 +63,20 @@ body {
   html.has-custom-cursor * {
     cursor: none !important;
   }
+
+  /* El puntero personalizado se apaga sobre campos editables (ver
+     CustomCursor.tsx), así que aquí se restaura el cursor nativo del
+     sistema para que nunca desaparezca al escribir. */
+  html.has-custom-cursor input,
+  html.has-custom-cursor textarea,
+  html.has-custom-cursor [contenteditable="true"] {
+    cursor: text !important;
+  }
+
+  html.has-custom-cursor select,
+  html.has-custom-cursor option {
+    cursor: pointer !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

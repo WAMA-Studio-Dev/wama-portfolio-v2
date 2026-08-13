@@ -10,13 +10,31 @@ type Phase = "ball" | "exploding" | "revealed";
 
 const BALL_SIZE = 56;
 
-function randomBallTarget(rangeX: number, rangeY: number) {
-  return {
-    x: (Math.random() * 2 - 1) * rangeX,
-    y: (Math.random() * 2 - 1) * rangeY,
-    rotate: Math.random() * 360 * (Math.random() > 0.5 ? 1 : -1),
-    duration: 2.5 + Math.random() * 3,
-  };
+/**
+ * Genera una trayectoria orgánica de 6-8 puntos clave (keyframes) que
+ * arranca donde terminó la trayectoria anterior, para que el loop nunca
+ * dé un salto visible al reiniciar.
+ */
+function randomBallPath(
+  rangeX: number,
+  rangeY: number,
+  startX = 0,
+  startY = 0,
+  startRotate = 0
+) {
+  const count = 6 + Math.floor(Math.random() * 3); // 6, 7 u 8 puntos
+  const xs = [startX];
+  const ys = [startY];
+  const rotates = [startRotate];
+
+  for (let i = 1; i < count; i++) {
+    xs.push((Math.random() * 2 - 1) * rangeX);
+    ys.push((Math.random() * 2 - 1) * rangeY);
+    rotates.push(startRotate + (Math.random() * 2 - 1) * 200 * i);
+  }
+
+  const duration = count * (1.7 + Math.random() * 1.3);
+  return { xs, ys, rotates, duration };
 }
 
 const PARTICLES = Array.from({ length: 12 }, (_, i) => {
@@ -43,16 +61,21 @@ export default function RollingLogo() {
   const rangeX = Math.max(0, bounds.width / 2 - BALL_SIZE / 2 - 4);
   const rangeY = Math.max(0, bounds.height / 2 - BALL_SIZE / 2 - 4);
   // Estado inicial determinista (sin Math.random) para que SSR y el primer
-  // render en cliente coincidan; el primer objetivo aleatorio real se fija
-  // en el efecto de abajo, ya solo en cliente.
-  const [target, setTarget] = useState({ x: 0, y: 0, rotate: 0, duration: 1 });
+  // render en cliente coincidan; la primera trayectoria aleatoria real se
+  // fija en el efecto de abajo, ya solo en cliente.
+  const [path, setPath] = useState(() => ({
+    xs: [0],
+    ys: [0],
+    rotates: [0],
+    duration: 1,
+  }));
   const measured = bounds.width > 0 && bounds.height > 0;
 
   useEffect(() => {
     if (!measured) return;
     // Diferido a un timer (no síncrono en el efecto) para no encadenar
     // un re-render inmediato en el commit. Solo al medir por primera vez.
-    const id = setTimeout(() => setTarget(randomBallTarget(rangeX, rangeY)), 0);
+    const id = setTimeout(() => setPath(randomBallPath(rangeX, rangeY)), 0);
     return () => clearTimeout(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [measured]);
@@ -88,7 +111,10 @@ export default function RollingLogo() {
   };
 
   return (
-    <div ref={containerRef} className="relative mx-auto h-56 w-64 md:mx-0 md:h-64 md:w-72">
+    <div
+      ref={containerRef}
+      className="relative h-full min-h-[300px] w-full md:min-h-[420px]"
+    >
       <AnimatePresence mode="wait" initial={false}>
         {phase === "ball" && (
           <motion.button
@@ -102,15 +128,25 @@ export default function RollingLogo() {
             animate={
               reduce
                 ? { x: 0, y: 0, rotate: 0 }
-                : { x: target.x, y: target.y, rotate: target.rotate }
+                : { x: path.xs, y: path.ys, rotate: path.rotates }
             }
             transition={
               reduce
                 ? { duration: 0.2 }
-                : { duration: target.duration, ease: "easeInOut" }
+                : { duration: path.duration, ease: "easeInOut" }
             }
             onAnimationComplete={() => {
-              if (!reduce) setTarget(randomBallTarget(rangeX, rangeY));
+              if (!reduce) {
+                setPath((prev) =>
+                  randomBallPath(
+                    rangeX,
+                    rangeY,
+                    prev.xs[prev.xs.length - 1],
+                    prev.ys[prev.ys.length - 1],
+                    prev.rotates[prev.rotates.length - 1]
+                  )
+                );
+              }
             }}
           >
             <span

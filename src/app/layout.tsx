@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Sora, JetBrains_Mono } from "next/font/google";
 import CustomCursor from "@/components/CustomCursor";
 import ContactDrawer from "@/components/ContactDrawer";
+import CookieConsent from "@/components/CookieConsent";
 import { ContactDrawerProvider } from "@/lib/contact-drawer-context";
 import "./globals.css";
 
@@ -38,6 +39,7 @@ export default function RootLayout({
           <CustomCursor />
           {children}
           <ContactDrawer />
+          <CookieConsent />
         </ContactDrawerProvider>
       </body>
     </html>

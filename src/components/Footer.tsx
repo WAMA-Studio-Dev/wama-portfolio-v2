@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { InstagramLogo, EnvelopeSimple } from "@phosphor-icons/react/dist/ssr";
 
 export default function Footer() {
@@ -38,6 +39,32 @@ export default function Footer() {
         <p className="font-mono-wama text-[11px] text-text-dimmer">
           © {new Date().getFullYear()} WAMA Studio. Todos los derechos reservados.
         </p>
+      </div>
+
+      <div className="border-t border-line">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-6 gap-y-2 px-6 py-5 md:justify-start md:px-10">
+          <Link
+            href="/aviso-legal"
+            data-cursor
+            className="font-mono-wama text-[11px] uppercase tracking-[0.1em] text-text-dimmer transition-colors duration-200 hover:text-text"
+          >
+            Aviso Legal
+          </Link>
+          <Link
+            href="/politica-de-privacidad"
+            data-cursor
+            className="font-mono-wama text-[11px] uppercase tracking-[0.1em] text-text-dimmer transition-colors duration-200 hover:text-text"
+          >
+            Política de Privacidad
+          </Link>
+          <Link
+            href="/politica-de-cookies"
+            data-cursor
+            className="font-mono-wama text-[11px] uppercase tracking-[0.1em] text-text-dimmer transition-colors duration-200 hover:text-text"
+          >
+            Política de Cookies
+          </Link>
+        </div>
       </div>
     </footer>
   );

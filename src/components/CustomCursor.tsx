@@ -8,9 +8,12 @@ const SPRING = { stiffness: 900, damping: 40, mass: 0.4 };
 const SPRING_SIZE = { stiffness: 400, damping: 28, mass: 0.3 };
 const HOVER_PADDING = 8;
 
+const EDITABLE_SELECTOR = 'input, textarea, select, [contenteditable="true"]';
+
 export default function CustomCursor() {
   const enabled = useFinePointer();
   const [hovering, setHovering] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
@@ -34,9 +37,10 @@ export default function CustomCursor() {
     const handleMove = (e: PointerEvent) => {
       if (rafId.current) cancelAnimationFrame(rafId.current);
       rafId.current = requestAnimationFrame(() => {
-        const target = (e.target as HTMLElement)?.closest<HTMLElement>(
-          "[data-cursor]"
-        );
+        const eventTarget = e.target as HTMLElement | null;
+        setEditing(!!eventTarget?.closest<HTMLElement>(EDITABLE_SELECTOR));
+
+        const target = eventTarget?.closest<HTMLElement>("[data-cursor]");
         if (target) {
           const rect = target.getBoundingClientRect();
           const targetRadius = parseFloat(
@@ -93,6 +97,7 @@ export default function CustomCursor() {
         borderRadius: springRadius,
         translateX: "-50%",
         translateY: "-50%",
+        opacity: editing ? 0 : 1,
         background: hovering
           ? "rgba(122, 26, 36, 0.16)"
           : "rgba(242, 233, 216, 0.92)",
@@ -101,7 +106,7 @@ export default function CustomCursor() {
           ? "inset 0 1px 0 rgba(242, 233, 216, 0.12), 0 0 24px var(--accent-tinto-glow)"
           : "0 0 16px var(--accent-tinto-glow)",
       }}
-      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
     />
   );
 }
