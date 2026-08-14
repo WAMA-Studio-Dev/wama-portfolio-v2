@@ -18,16 +18,31 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4 md:pt-5">
+    <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3 md:pt-4">
       <motion.nav
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         className={cn(
-          "flex h-14 w-full max-w-5xl items-center justify-between rounded-full border border-line px-3 pl-4 backdrop-blur-xl transition-colors duration-300 md:h-16 md:px-4 md:pl-5",
+          "grid h-11 w-full max-w-[280px] grid-cols-[auto_1fr_auto] items-center gap-1.5 rounded-full border border-line px-2 backdrop-blur-xl transition-colors duration-300 md:h-12 md:max-w-xs md:px-2.5",
           scrolled ? "bg-bg/80 shadow-[0_8px_30px_rgba(0,0,0,0.35)]" : "bg-bg/40"
         )}
       >
+        <SpecularButton
+          as="a"
+          href="https://instagram.com/wama.lab"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-cursor
+          aria-label="Instagram de WAMA"
+          radius={999}
+          lineColor="#ffffff"
+          textColor="var(--text-dim)"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-line text-text-dim transition-colors duration-200 hover:border-line-strong hover:text-text md:h-9 md:w-9"
+        >
+          <InstagramLogo size={15} />
+        </SpecularButton>
+
         <a
           href="#inicio"
           data-cursor
@@ -35,10 +50,10 @@ export default function Navbar() {
             e.preventDefault();
             document.querySelector("#inicio")?.scrollIntoView({ behavior: "smooth" });
           }}
-          className="group flex items-center gap-2"
+          className="group flex items-center justify-center gap-1.5"
         >
           <motion.span
-            className="relative block h-8 w-8 overflow-hidden rounded-[10px] md:h-9 md:w-9"
+            className="relative block h-6 w-6 overflow-hidden rounded-[7px] md:h-7 md:w-7"
             style={{ perspective: 400 }}
             whileHover={{ rotateY: 180 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -47,46 +62,28 @@ export default function Navbar() {
               src="/logo.png"
               alt="WAMA"
               fill
-              sizes="36px"
+              sizes="28px"
               className="object-cover drop-shadow-[0_0_12px_rgba(122,26,36,0.45)]"
               priority
             />
           </motion.span>
-          <span className="font-sora text-sm font-semibold tracking-tight text-text">
-            WAMA<span className="align-super text-[9px] text-text-dim">®</span>
+          <span className="font-sora text-xs font-semibold tracking-tight text-text md:text-sm">
+            WAMA<span className="align-super text-[8px] text-text-dim">®</span>
           </span>
         </a>
 
-        <div className="flex items-center gap-2">
-          <SpecularButton
-            as="a"
-            href="https://instagram.com/wama.lab"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-cursor
-            aria-label="Instagram de WAMA"
-            radius={999}
-            lineColor="#ffffff"
-            textColor="var(--text-dim)"
-            className="inline-flex items-center gap-1.5 rounded-full border border-line px-3.5 py-2 font-mono-wama text-[11.5px] uppercase tracking-[0.06em] text-text-dim transition-colors duration-200 hover:border-line-strong hover:text-text md:px-4"
-          >
-            <InstagramLogo size={14} />
-            <span className="hidden sm:inline">Instagram</span>
-          </SpecularButton>
-          <SpecularButton
-            as="a"
-            href="mailto:wamastudio.contacto@gmail.com"
-            data-cursor
-            aria-label="Email de WAMA"
-            radius={999}
-            lineColor="#ffffff"
-            textColor="var(--text-dim)"
-            className="inline-flex items-center gap-1.5 rounded-full border border-line px-3.5 py-2 font-mono-wama text-[11.5px] uppercase tracking-[0.06em] text-text-dim transition-colors duration-200 hover:border-line-strong hover:text-text md:px-4"
-          >
-            <EnvelopeSimple size={14} />
-            <span className="hidden sm:inline">Email</span>
-          </SpecularButton>
-        </div>
+        <SpecularButton
+          as="a"
+          href="mailto:wamastudio.contacto@gmail.com"
+          data-cursor
+          aria-label="Email de WAMA"
+          radius={999}
+          lineColor="#ffffff"
+          textColor="var(--text-dim)"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-line text-text-dim transition-colors duration-200 hover:border-line-strong hover:text-text md:h-9 md:w-9"
+        >
+          <EnvelopeSimple size={15} />
+        </SpecularButton>
       </motion.nav>
     </header>
   );
