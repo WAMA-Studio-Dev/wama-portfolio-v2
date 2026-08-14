@@ -3,6 +3,7 @@ import { Sora, JetBrains_Mono } from "next/font/google";
 import CustomCursor from "@/components/CustomCursor";
 import ContactDrawer from "@/components/ContactDrawer";
 import CookieConsent from "@/components/CookieConsent";
+import GlobalStarfield from "@/components/GlobalStarfield";
 import { ContactDrawerProvider } from "@/lib/contact-drawer-context";
 import { CookieConsentProvider } from "@/lib/cookie-consent-context";
 import "./globals.css";
@@ -36,6 +37,7 @@ export default function RootLayout({
       className={`${sora.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-text overflow-x-hidden">
+        <GlobalStarfield />
         <ContactDrawerProvider>
           <CookieConsentProvider>
             <CustomCursor />

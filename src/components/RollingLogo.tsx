@@ -5,6 +5,7 @@ import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useContactDrawer } from "@/lib/contact-drawer-context";
 import { useElementSize } from "@/lib/use-element-size";
+import SpecularButton from "./ui/SpecularButton";
 
 type Phase = "ball" | "exploding" | "revealed";
 
@@ -123,7 +124,7 @@ export default function RollingLogo() {
             data-cursor
             aria-label="Descubrir el logo de WAMA"
             onClick={handleBallClick}
-            className="absolute left-1/2 top-1/2 -ml-7 -mt-7 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#a8323f] to-[#3d0c12] shadow-[inset_-6px_-6px_14px_rgba(0,0,0,0.45),inset_5px_5px_10px_rgba(255,255,255,0.18),0_8px_20px_rgba(0,0,0,0.35)]"
+            className="absolute left-1/2 top-1/2 -ml-7 -mt-7 h-14 w-14 overflow-hidden rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.35)]"
             style={{ willChange: "transform" }}
             animate={
               reduce
@@ -149,12 +150,7 @@ export default function RollingLogo() {
               }
             }}
           >
-            <span
-              aria-hidden
-              className="font-sora text-lg font-bold text-text/90 [text-shadow:0_1px_1px_rgba(0,0,0,0.5)]"
-            >
-              W
-            </span>
+            <Image src="/logo.png" alt="WAMA" fill sizes="56px" className="object-cover" />
           </motion.button>
         )}
 
@@ -204,14 +200,17 @@ export default function RollingLogo() {
               />
             </span>
 
-            <button
+            <SpecularButton
               type="button"
               data-cursor
               onClick={open}
+              radius={999}
+              lineColor="#ffffff"
+              textColor="var(--text)"
               className="rounded-full bg-tinto px-6 py-3 font-sora text-sm font-semibold text-text transition-transform duration-200 ease-out active:scale-[0.97]"
             >
               Confía en nosotros
-            </button>
+            </SpecularButton>
           </motion.div>
         )}
       </AnimatePresence>

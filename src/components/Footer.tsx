@@ -9,7 +9,7 @@ export default function Footer() {
   const { openSettings } = useCookieConsent();
 
   return (
-    <footer className="border-t border-line bg-bg">
+    <footer>
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-6 px-6 py-10 md:flex-row md:justify-between md:px-10">
         <div className="flex items-center gap-2">
           <span className="relative block h-6 w-6 overflow-hidden rounded-[7px]">
@@ -46,8 +46,8 @@ export default function Footer() {
         </p>
       </div>
 
-      <div className="border-t border-line">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-6 gap-y-2 px-6 py-5 md:justify-start md:px-10">
+      <div>
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-6 gap-y-2 px-6 py-5 md:px-10">
           <Link
             href="/aviso-legal"
             data-cursor

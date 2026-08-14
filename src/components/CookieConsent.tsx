@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { X } from "@phosphor-icons/react/dist/ssr";
 import { useCookieConsent } from "@/lib/cookie-consent-context";
+import SpecularButton from "./ui/SpecularButton";
 
 const STORAGE_KEY = "wama-cookie-consent";
 
@@ -115,22 +116,28 @@ export default function CookieConsent() {
             </p>
 
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <button
+              <SpecularButton
                 type="button"
                 data-cursor
                 onClick={acceptAll}
+                radius={999}
+                lineColor="#ffffff"
+                textColor="var(--text)"
                 className="inline-flex items-center rounded-full bg-tinto px-5 py-2.5 font-sora text-sm font-semibold text-text transition-transform duration-200 ease-out active:scale-[0.97]"
               >
                 Aceptar todas
-              </button>
-              <button
+              </SpecularButton>
+              <SpecularButton
                 type="button"
                 data-cursor
                 onClick={rejectOptional}
+                radius={999}
+                lineColor="#ffffff"
+                textColor="var(--text-dim)"
                 className="inline-flex items-center rounded-full border border-line px-5 py-2.5 font-sora text-sm font-semibold text-text-dim transition-colors duration-200 hover:border-line-strong hover:text-text"
               >
                 Rechazar opcionales
-              </button>
+              </SpecularButton>
               <button
                 type="button"
                 data-cursor
@@ -216,22 +223,28 @@ export default function CookieConsent() {
               </div>
 
               <div className="mt-6 flex flex-wrap items-center gap-3">
-                <button
+                <SpecularButton
                   type="button"
                   data-cursor
                   onClick={() => persist(draft)}
+                  radius={999}
+                  lineColor="#ffffff"
+                  textColor="var(--text)"
                   className="inline-flex items-center rounded-full bg-tinto px-5 py-2.5 font-sora text-sm font-semibold text-text transition-transform duration-200 ease-out active:scale-[0.97]"
                 >
                   Guardar preferencias
-                </button>
-                <button
+                </SpecularButton>
+                <SpecularButton
                   type="button"
                   data-cursor
                   onClick={acceptAll}
+                  radius={999}
+                  lineColor="#ffffff"
+                  textColor="var(--text-dim)"
                   className="inline-flex items-center rounded-full border border-line px-5 py-2.5 font-sora text-sm font-semibold text-text-dim transition-colors duration-200 hover:border-line-strong hover:text-text"
                 >
                   Aceptar todas
-                </button>
+                </SpecularButton>
               </div>
             </motion.div>
           </motion.div>
@@ -254,8 +267,14 @@ function CategoryRow({
   disabled?: boolean;
   onChange?: (checked: boolean) => void;
 }) {
+  const toggle = () => {
+    if (disabled) return;
+    onChange?.(!checked);
+  };
+
   return (
-    <label
+    <div
+      onClick={toggle}
       className={`flex items-start justify-between gap-4 rounded-xl border border-line bg-fill-ghost px-4 py-3.5 ${
         disabled ? "" : "cursor-pointer"
       }`}
@@ -268,14 +287,28 @@ function CategoryRow({
           {description}
         </span>
       </span>
-      <input
-        type="checkbox"
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        aria-label={title}
         data-cursor
-        checked={checked}
         disabled={disabled}
-        onChange={(e) => onChange?.(e.target.checked)}
-        className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-line bg-transparent accent-tinto disabled:cursor-not-allowed disabled:opacity-60"
-      />
-    </label>
+        onClick={(e) => {
+          e.stopPropagation();
+          toggle();
+        }}
+        className={`relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition-colors duration-200 ease-out ${
+          checked ? "bg-tinto" : "bg-white/15"
+        } ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
+      >
+        <span
+          aria-hidden
+          className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-text shadow-[0_1px_2px_rgba(0,0,0,0.4)] transition-transform duration-200 ease-out ${
+            checked ? "translate-x-5" : "translate-x-0"
+          }`}
+        />
+      </button>
+    </div>
   );
 }

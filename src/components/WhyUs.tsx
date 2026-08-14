@@ -282,7 +282,7 @@ function ProcessRoadmap() {
 
 export default function WhyUs() {
   return (
-    <section className="relative border-t border-line bg-bg py-24 md:py-32">
+    <section className="relative py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <Reveal>
           <p className="font-mono-wama text-[11px] uppercase tracking-[0.22em] text-tinto">

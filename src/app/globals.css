@@ -139,3 +139,49 @@ body {
 .wama-cursor-blink {
   animation: wama-blink 1s step-end infinite;
 }
+
+.hero-horizon-stars {
+  background-image:
+    radial-gradient(1.5px 1.5px at 10% 20%, rgba(242, 233, 216, 0.9), transparent 100%),
+    radial-gradient(1px 1px at 30% 65%, rgba(242, 233, 216, 0.6), transparent 100%),
+    radial-gradient(1.5px 1.5px at 50% 15%, rgba(242, 233, 216, 0.8), transparent 100%),
+    radial-gradient(1px 1px at 70% 80%, rgba(242, 233, 216, 0.5), transparent 100%),
+    radial-gradient(1.5px 1.5px at 85% 35%, rgba(242, 233, 216, 0.7), transparent 100%),
+    radial-gradient(1px 1px at 15% 85%, rgba(242, 233, 216, 0.5), transparent 100%),
+    radial-gradient(1.5px 1.5px at 92% 60%, rgba(242, 233, 216, 0.6), transparent 100%),
+    radial-gradient(1px 1px at 40% 40%, rgba(242, 233, 216, 0.4), transparent 100%);
+  background-repeat: repeat;
+  background-size: 340px 340px;
+  animation:
+    wama-twinkle 6s ease-in-out infinite alternate,
+    wama-star-drift 90s linear infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes wama-twinkle {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Deriva diagonal de las partículas, en bucle perfecto: se desplaza
+   exactamente un tile del patrón (340px), así que el salto de vuelta al
+   inicio es invisible. El contenedor debe sobresalir del recorte visible
+   (ver estilo inline en Hero.tsx) para que la deriva no descubra bordes. */
+@keyframes wama-star-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-340px, -340px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-horizon-stars {
+    animation: wama-twinkle 6s ease-in-out infinite alternate;
+  }
+}

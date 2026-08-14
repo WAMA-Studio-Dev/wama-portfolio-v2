@@ -27,6 +27,7 @@ import {
   type ContactFormValues,
 } from "@/lib/contact-schema";
 import { cn } from "@/lib/utils";
+import SpecularButton from "./ui/SpecularButton";
 
 type FieldIcon = React.ComponentType<{ size?: number; className?: string }>;
 
@@ -354,16 +355,19 @@ export default function ContactDrawer() {
                     </div>
                   )}
 
-                  <button
+                  <SpecularButton
                     type="submit"
                     data-cursor
                     disabled={isSubmitting || status === "loading"}
+                    radius={999}
+                    lineColor="#ffffff"
+                    textColor="var(--text)"
                     className={cn(
                       "inline-flex w-fit items-center gap-2 rounded-full bg-tinto px-7 py-3.5 font-sora text-sm font-semibold text-text transition-transform duration-200 ease-out active:scale-[0.97] disabled:opacity-60"
                     )}
                   >
                     {status === "loading" ? "Enviando..." : "Enviar mensaje"}
-                  </button>
+                  </SpecularButton>
                 </form>
               )}
             </div>

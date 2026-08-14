@@ -1,0 +1,58 @@
+/*
+ * Deliberadamente mínimo: esta hoja de estilos NUNCA debe fijar
+ * background, border, border-radius, color, font-*, box-shadow ni
+ * transform, porque esas propiedades ya las trae el `className` original
+ * de cada botón de WAMA (aplicado al span `.specular-button__label`).
+ * Si esta hoja las tocara, ganar o perder la cascada dependería del
+ * orden de carga del bundle — un riesgo real de romper el aspecto visual
+ * exacto que ya tenía cada botón. Aquí solo vive lo estrictamente
+ * necesario para que la capa WebGL se posicione encima sin robar layout.
+ */
+
+.specular-button {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+}
+
+.specular-button:disabled {
+  cursor: default;
+}
+
+/* Presets de tamaño opcionales del propio componente — solo se aplican si
+   se pasa la prop `size` explícitamente. Ningún botón de WAMA la usa (cada
+   uno trae su propio padding/tipografía vía className), así que esto es
+   inerte en la práctica; se conserva por completitud de la API. */
+.specular-button--sm {
+  font-size: 0.85rem;
+  padding: 10px 22px;
+}
+.specular-button--md {
+  font-size: 1rem;
+  padding: 14px 30px;
+}
+.specular-button--lg {
+  font-size: 1.15rem;
+  padding: 18px 40px;
+}
+
+/* El canvas sobresale del botón para que el brillo del borde pueda
+   "sangrar" hacia fuera, igual que en el componente de referencia. */
+.specular-button__fx {
+  position: absolute;
+  inset: -20px;
+  pointer-events: none;
+  z-index: 1;
+}
+.specular-button__fx canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* El contenido real del botón vive aquí, siempre por encima de la capa
+   WebGL, con el className original de WAMA intacto. */
+.specular-button__label {
+  position: relative;
+  z-index: 2;
+}

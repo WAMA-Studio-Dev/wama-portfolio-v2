@@ -1,0 +1,20 @@
+.floating-lines-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/*
+ * Desvanece las líneas en el último tramo (vertical) del contenedor, para
+ * que la transición hacia la siguiente sección no sea un corte brusco:
+ * las líneas se apagan progresivamente y solo quedan las partículas de
+ * fondo. Aplicado directamente sobre `.floating-lines-container` (el
+ * mismo elemento que ya lleva `mix-blend-mode`), no sobre un wrapper
+ * nuevo — así no aparece un contexto de apilamiento extra entre las
+ * partículas y este efecto que rompa el blend.
+ */
+.floating-lines-fade-bottom {
+  mask-image: linear-gradient(to bottom, black 0%, black 62%, transparent 92%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 62%, transparent 92%);
+}

@@ -75,14 +75,14 @@ function ComingSoonCard() {
           className="text-center font-mono-wama text-2xl uppercase tracking-[0.1em] text-tinto sm:text-3xl sm:tracking-[0.14em] md:text-4xl md:tracking-[0.18em]"
         />
       </div>
-      <div className="p-5">
+      <div className="p-5 text-center">
         <p aria-hidden className="invisible font-mono-wama text-[10.5px] uppercase tracking-[0.16em]">
           &nbsp;
         </p>
         <p aria-hidden className="invisible mt-1.5 font-sora text-base font-semibold">
           &nbsp;
         </p>
-        <div aria-hidden className="mt-4 flex flex-wrap gap-2">
+        <div aria-hidden className="mt-4 flex flex-wrap justify-center gap-2">
           <span className={cn(CARD_BUTTON_CLASS, "invisible")}>&nbsp;</span>
         </div>
       </div>
@@ -109,7 +109,7 @@ export default function Projects() {
   return (
     <section
       id="proyectos"
-      className="relative border-t border-line bg-bg py-24 md:py-32"
+      className="relative py-24 md:py-32"
     >
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <Reveal>
@@ -139,7 +139,7 @@ export default function Projects() {
                       className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                     />
                   </div>
-                  <div className="p-5">
+                  <div className="p-5 text-center">
                     <p className="font-mono-wama text-[10.5px] uppercase tracking-[0.16em] text-tinto">
                       {item.category}
                     </p>
@@ -147,7 +147,7 @@ export default function Projects() {
                       {item.name}
                     </p>
 
-                    <div className="mt-4 flex flex-wrap gap-2">
+                    <div className="mt-4 flex flex-wrap justify-center gap-2">
                       <button
                         type="button"
                         data-cursor
