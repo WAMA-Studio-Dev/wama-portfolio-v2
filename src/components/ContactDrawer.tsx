@@ -265,7 +265,6 @@ export default function ContactDrawer() {
                     <input
                       id="instagram"
                       type="text"
-                      placeholder="@tu.marca"
                       {...register("instagram")}
                       className="w-full border-b border-line bg-transparent py-2 pl-6 text-base text-text outline-none transition-colors duration-200 focus:border-tinto placeholder:text-text-dimmer"
                     />
@@ -301,7 +300,7 @@ export default function ContactDrawer() {
                       htmlFor="message"
                       className="mb-2 block text-xs uppercase tracking-[0.1em] text-text-dimmer"
                     >
-                      Mensaje / detalles del proyecto
+                      Mensaje / detalles del proyecto (opcional)
                     </label>
                     <textarea
                       id="message"

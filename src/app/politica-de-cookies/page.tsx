@@ -20,39 +20,94 @@ export default function PoliticaDeCookiesPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="2. Cookies y almacenamiento que utilizamos">
+      <LegalSection title="2. Categorías de cookies que utilizamos">
         <p>
-          Este sitio web utiliza únicamente almacenamiento{" "}
-          <strong className="text-text">técnico y necesario</strong> para
-          su funcionamiento:
+          Clasificamos las cookies y el almacenamiento local que puede
+          utilizar este sitio en tres categorías. Puedes decidir cuáles
+          aceptas desde el panel{" "}
+          <strong className="text-text">&quot;Configurar cookies&quot;</strong>,
+          disponible en el pie de página en todo momento.
         </p>
-        <ul className="list-disc space-y-1 pl-5">
+        <ul className="list-disc space-y-2 pl-5">
           <li>
-            <strong className="text-text">wama-cookie-consent</strong>{" "}
-            (localStorage): guarda tu decisión sobre este mismo aviso de
-            cookies para que no vuelva a mostrarse en cada visita.
+            <strong className="text-text">Necesarias:</strong> imprescindibles
+            para el funcionamiento del sitio (por ejemplo, recordar tu
+            decisión sobre cookies). No requieren consentimiento y no se
+            pueden desactivar.
+          </li>
+          <li>
+            <strong className="text-text">Analíticas:</strong> nos
+            permitirían medir el uso del sitio para mejorarlo (por ejemplo,
+            Google Analytics). Requieren tu consentimiento previo.{" "}
+            <strong className="text-text">
+              Actualmente no están activas.
+            </strong>
+          </li>
+          <li>
+            <strong className="text-text">Marketing:</strong> permitirían
+            medir campañas o mostrar contenido personalizado en redes
+            sociales (por ejemplo, Meta Pixel). Requieren tu consentimiento
+            previo.{" "}
+            <strong className="text-text">
+              Actualmente no están activas.
+            </strong>
           </li>
         </ul>
         <p>
-          Actualmente <strong className="text-text">no utilizamos</strong>{" "}
-          cookies analíticas, de personalización ni publicitarias de
-          terceros. Si en el futuro se incorporase alguna, actualizaremos
-          esta política y solicitaremos tu consentimiento cuando sea
-          necesario.
+          Si en el futuro incorporamos cookies analíticas o de marketing,
+          actualizaremos esta política y esa categoría solo se activará si
+          la habilitas expresamente desde el panel de configuración.
         </p>
       </LegalSection>
 
-      <LegalSection title="3. Cómo gestionar o eliminar estas preferencias">
+      <LegalSection title="3. Tabla de cookies">
+        <div className="overflow-x-auto rounded-xl border border-line">
+          <table className="w-full min-w-[480px] border-collapse text-left text-xs">
+            <thead>
+              <tr className="border-b border-line bg-fill-ghost">
+                <th className="px-4 py-3 font-mono-wama uppercase tracking-[0.08em] text-text-dimmer">
+                  Nombre
+                </th>
+                <th className="px-4 py-3 font-mono-wama uppercase tracking-[0.08em] text-text-dimmer">
+                  Categoría
+                </th>
+                <th className="px-4 py-3 font-mono-wama uppercase tracking-[0.08em] text-text-dimmer">
+                  Finalidad
+                </th>
+                <th className="px-4 py-3 font-mono-wama uppercase tracking-[0.08em] text-text-dimmer">
+                  Duración
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-line">
+                <td className="px-4 py-3 text-text">wama-cookie-consent</td>
+                <td className="px-4 py-3 text-text-dim">Necesaria</td>
+                <td className="px-4 py-3 text-text-dim">
+                  Guarda tus preferencias de cookies para no volver a
+                  preguntarte en cada visita.
+                </td>
+                <td className="px-4 py-3 text-text-dim">
+                  Persistente (hasta que la borres)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </LegalSection>
+
+      <LegalSection title="4. Cómo gestionar o eliminar estas preferencias">
         <p>
-          Puedes eliminar la preferencia guardada en cualquier momento
-          borrando los datos de navegación (almacenamiento local) de tu
-          navegador para este sitio, o desde la configuración de
-          privacidad de tu navegador. Al hacerlo, el aviso de cookies
-          volverá a mostrarse en tu próxima visita.
+          Puedes cambiar tu decisión en cualquier momento desde el enlace{" "}
+          <strong className="text-text">&quot;Configurar cookies&quot;</strong>{" "}
+          en el pie de página, o eliminar la preferencia guardada borrando
+          los datos de navegación (almacenamiento local) de tu navegador
+          para este sitio. Al hacerlo, el aviso de cookies volverá a
+          mostrarse en tu próxima visita.
         </p>
       </LegalSection>
 
-      <LegalSection title="4. Más información">
+      <LegalSection title="5. Más información">
         <p>
           Para cualquier duda sobre esta Política de Cookies, puedes
           escribirnos a{" "}

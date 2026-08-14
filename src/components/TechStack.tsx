@@ -112,7 +112,10 @@ export default function TechStack() {
     >
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <Reveal>
-          <h2 className="max-w-lg font-sora text-3xl font-semibold leading-tight tracking-tight text-text md:text-4xl">
+          <p className="font-mono-wama text-[11px] uppercase tracking-[0.22em] text-tinto">
+            Stack tecnológico
+          </p>
+          <h2 className="mt-3 max-w-lg font-sora text-3xl font-semibold leading-tight tracking-tight text-text md:text-4xl">
             El motor detrás de tu nueva web.
           </h2>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-text-dim">

@@ -1,8 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { InstagramLogo, EnvelopeSimple } from "@phosphor-icons/react/dist/ssr";
+import { useCookieConsent } from "@/lib/cookie-consent-context";
 
 export default function Footer() {
+  const { openSettings } = useCookieConsent();
+
   return (
     <footer className="border-t border-line bg-bg">
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-6 px-6 py-10 md:flex-row md:justify-between md:px-10">
@@ -51,6 +56,13 @@ export default function Footer() {
             Aviso Legal
           </Link>
           <Link
+            href="/terminos-y-condiciones"
+            data-cursor
+            className="font-mono-wama text-[11px] uppercase tracking-[0.1em] text-text-dimmer transition-colors duration-200 hover:text-text"
+          >
+            Términos y Condiciones
+          </Link>
+          <Link
             href="/politica-de-privacidad"
             data-cursor
             className="font-mono-wama text-[11px] uppercase tracking-[0.1em] text-text-dimmer transition-colors duration-200 hover:text-text"
@@ -64,6 +76,14 @@ export default function Footer() {
           >
             Política de Cookies
           </Link>
+          <button
+            type="button"
+            data-cursor
+            onClick={openSettings}
+            className="font-mono-wama text-[11px] uppercase tracking-[0.1em] text-text-dimmer transition-colors duration-200 hover:text-text"
+          >
+            Configurar cookies
+          </button>
         </div>
       </div>
     </footer>

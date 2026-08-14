@@ -82,6 +82,14 @@ export default function Hero() {
 
         <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 gap-10 px-6 pt-24 pb-16 md:px-10 md:pt-24">
           <div>
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="mb-4 font-mono-wama text-[11px] uppercase tracking-[0.22em] text-tinto"
+            >
+              Desarrollo web a medida
+            </motion.p>
             <CmdTypewriter
               as="h1"
               showPrefix={false}

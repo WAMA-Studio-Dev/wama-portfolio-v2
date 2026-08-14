@@ -24,7 +24,9 @@ export const contactSchema = z.object({
   message: z
     .string()
     .trim()
-    .min(10, "Cuéntanos un poco más sobre el proyecto"),
+    .max(2000, "El mensaje es demasiado largo")
+    .optional()
+    .or(z.literal("")),
   consent: z.boolean().refine((val) => val === true, {
     message: "Debes aceptar la Política de Privacidad para continuar",
   }),

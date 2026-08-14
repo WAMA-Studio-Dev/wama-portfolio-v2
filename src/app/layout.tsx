@@ -4,6 +4,7 @@ import CustomCursor from "@/components/CustomCursor";
 import ContactDrawer from "@/components/ContactDrawer";
 import CookieConsent from "@/components/CookieConsent";
 import { ContactDrawerProvider } from "@/lib/contact-drawer-context";
+import { CookieConsentProvider } from "@/lib/cookie-consent-context";
 import "./globals.css";
 
 const sora = Sora({
@@ -36,10 +37,12 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-bg text-text overflow-x-hidden">
         <ContactDrawerProvider>
-          <CustomCursor />
-          {children}
-          <ContactDrawer />
-          <CookieConsent />
+          <CookieConsentProvider>
+            <CustomCursor />
+            {children}
+            <ContactDrawer />
+            <CookieConsent />
+          </CookieConsentProvider>
         </ContactDrawerProvider>
       </body>
     </html>

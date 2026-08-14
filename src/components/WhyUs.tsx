@@ -285,7 +285,10 @@ export default function WhyUs() {
     <section className="relative border-t border-line bg-bg py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <Reveal>
-          <h2 className="max-w-lg font-sora text-3xl font-semibold leading-tight tracking-tight text-text md:text-4xl">
+          <p className="font-mono-wama text-[11px] uppercase tracking-[0.22em] text-tinto">
+            Metodología
+          </p>
+          <h2 className="mt-3 max-w-lg font-sora text-3xl font-semibold leading-tight tracking-tight text-text md:text-4xl">
             Cómo se trabaja en WAMA.
           </h2>
         </Reveal>

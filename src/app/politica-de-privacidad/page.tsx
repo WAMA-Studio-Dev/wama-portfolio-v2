@@ -108,6 +108,27 @@ export default function PoliticaDePrivacidadPage() {
           pérdida o alteración.
         </p>
       </LegalSection>
+
+      <LegalSection title="8. Transferencias internacionales de datos">
+        <p>
+          Nuestro proveedor de email transaccional, Resend, puede procesar
+          y almacenar datos en servidores ubicados fuera del Espacio
+          Económico Europeo (por ejemplo, en Estados Unidos). En estos
+          casos, la transferencia se realiza amparada en las garantías
+          previstas por el RGPD, como las Cláusulas Contractuales Tipo
+          aprobadas por la Comisión Europea u otro mecanismo equivalente
+          ofrecido por el proveedor. Puedes solicitarnos más información al
+          respecto en{" "}
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            data-cursor
+            className="text-text underline decoration-line-strong underline-offset-2 hover:text-tinto"
+          >
+            {CONTACT_EMAIL}
+          </a>
+          .
+        </p>
+      </LegalSection>
     </LegalLayout>
   );
 }

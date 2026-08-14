@@ -82,7 +82,17 @@ export default function AvisoLegalPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="7. Legislación aplicable">
+      <LegalSection title="7. Transparencia sobre el uso de inteligencia artificial">
+        <p>
+          En WAMA Studio empleamos herramientas de inteligencia artificial
+          como apoyo en procesos de diseño, desarrollo y generación de
+          contenido de este Sitio Web y de los proyectos que entregamos a
+          nuestros clientes. Esto no sustituye el criterio profesional del
+          equipo, que supervisa y valida cada entrega.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="8. Legislación aplicable">
         <p>
           Las presentes condiciones se rigen por la legislación española.
           Para cualquier controversia derivada del acceso o uso del Sitio

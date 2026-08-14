@@ -19,13 +19,13 @@ function internalNotificationHtml(data: {
   phone: string;
   instagram?: string;
   sector: string;
-  message: string;
+  message?: string;
 }) {
   const rows = [
     ["Nombre", data.name],
     ["Email", data.email],
     ["Teléfono", data.phone],
-    ["Instagram", data.instagram || "—"],
+    ["Instagram", data.instagram || "No proporcionado"],
     ["Sector", data.sector],
   ]
     .map(
@@ -41,8 +41,9 @@ function internalNotificationHtml(data: {
   <div style="background:#0b0b0c;padding:32px 16px;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
     <table role="presentation" width="100%" style="max-width:560px;margin:0 auto;background:#111113;border:1px solid #232326;border-radius:16px;overflow:hidden;">
       <tr>
-        <td style="background:#7a1a24;padding:20px 24px;">
-          <p style="margin:0;color:#f2e9d8;font-size:14px;font-weight:600;">Nuevo lead desde wama-portfolio-v2</p>
+        <td style="background:linear-gradient(135deg,#7a1a24,#4d1017);padding:22px 24px;">
+          <p style="margin:0;color:#f2e9d8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;">WAMA® Studio</p>
+          <p style="margin:8px 0 0;color:#f2e9d8;font-size:15px;font-weight:600;">Nuevo lead desde la web</p>
         </td>
       </tr>
       <tr>
@@ -55,7 +56,14 @@ function internalNotificationHtml(data: {
       <tr>
         <td style="padding:16px 24px 24px;">
           <p style="margin:0 0 8px;color:#9a9a9e;font-size:12px;text-transform:uppercase;letter-spacing:0.06em;">Mensaje</p>
-          <p style="margin:0;color:#f2e9d8;font-size:14px;line-height:1.6;white-space:pre-wrap;">${escapeHtml(data.message)}</p>
+          <p style="margin:0;color:#f2e9d8;font-size:14px;line-height:1.6;white-space:pre-wrap;">${escapeHtml(data.message || "No proporcionado")}</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:14px 24px 22px;border-top:1px solid #232326;">
+          <p style="margin:0;color:#5f5f63;font-size:11px;line-height:1.6;">
+            Responde directamente a este correo para contestar a ${escapeHtml(data.name)}.
+          </p>
         </td>
       </tr>
     </table>
@@ -67,9 +75,13 @@ function clientConfirmationHtml(name: string) {
   <div style="background:#0b0b0c;padding:32px 16px;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
     <table role="presentation" width="100%" style="max-width:560px;margin:0 auto;background:#111113;border:1px solid #232326;border-radius:16px;overflow:hidden;">
       <tr>
-        <td style="padding:32px 28px 8px;">
-          <p style="margin:0;color:#7a1a24;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;">WAMA Studio</p>
-          <h1 style="margin:14px 0 0;color:#f2e9d8;font-size:22px;font-weight:600;">Hola${name ? `, ${escapeHtml(name)}` : ""}.</h1>
+        <td style="background:linear-gradient(135deg,#7a1a24,#4d1017);padding:24px 28px;">
+          <p style="margin:0;color:#f2e9d8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;">WAMA® Studio</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:28px 28px 8px;">
+          <h1 style="margin:0;color:#f2e9d8;font-size:22px;font-weight:600;">Hola${name ? `, ${escapeHtml(name)}` : ""}.</h1>
         </td>
       </tr>
       <tr>
@@ -86,8 +98,8 @@ function clientConfirmationHtml(name: string) {
         </td>
       </tr>
       <tr>
-        <td style="padding:8px 28px 32px;">
-          <p style="margin:0;color:#5f5f63;font-size:12px;line-height:1.6;">
+        <td style="padding:8px 28px 32px;border-top:1px solid #232326;margin-top:8px;">
+          <p style="margin:16px 0 0;color:#5f5f63;font-size:12px;line-height:1.6;">
             WAMA Studio — Ingeniería de software · Diseño web · Dirección creativa
           </p>
         </td>
@@ -139,11 +151,11 @@ export async function POST(request: Request) {
           `Nombre: ${name}`,
           `Email: ${email}`,
           `Teléfono: ${phone}`,
-          `Instagram: ${instagram || "—"}`,
+          `Instagram: ${instagram || "No proporcionado"}`,
           `Sector: ${sector}`,
           "",
           "Mensaje:",
-          message,
+          message || "No proporcionado",
         ].join("\n"),
       }),
       resend.emails.send({

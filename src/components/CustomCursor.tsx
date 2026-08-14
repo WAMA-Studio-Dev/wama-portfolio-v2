@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "motion/react";
 import { useFinePointer } from "@/lib/use-fine-pointer";
 
-const SPRING = { stiffness: 900, damping: 40, mass: 0.4 };
+const SPRING = { stiffness: 900, damping: 40, mass: 0.1 };
 const SPRING_SIZE = { stiffness: 400, damping: 28, mass: 0.3 };
 const HOVER_PADDING = 8;
 
@@ -88,7 +88,7 @@ export default function CustomCursor() {
   return (
     <motion.div
       aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[100] flex items-center justify-center"
+      className="pointer-events-none fixed left-0 top-0 z-[300] flex items-center justify-center"
       style={{
         x: springX,
         y: springY,
