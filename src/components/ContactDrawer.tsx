@@ -128,14 +128,25 @@ export default function ContactDrawer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
-  const onSubmit = async (values: ContactFormValues) => {
+  const onSubmit = async (
+    values: ContactFormValues,
+    event?: React.BaseSyntheticEvent
+  ) => {
     setStatus("loading");
     setErrorMessage("");
+    // Honeypot anti-bot: campo señuelo fuera del schema de validación
+    // visible (ver src/app/api/contact/route.ts), leído del FormData nativo
+    // del <form> para no acoplarlo al estado/errores de react-hook-form.
+    const formEl = event?.target as HTMLFormElement | undefined;
+    const honeypot = formEl ? new FormData(formEl).get("company") : "";
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          company: typeof honeypot === "string" ? honeypot : "",
+        }),
       });
       if (!res.ok) {
         const data = (await res.json().catch(() => null)) as
@@ -201,7 +212,6 @@ export default function ContactDrawer() {
               <button
                 type="button"
                 aria-label="Cerrar"
-                data-cursor
                 onClick={handleClose}
                 className="flex h-9 w-9 items-center justify-center rounded-full text-text-dimmer transition-colors duration-200 hover:bg-white/10 hover:text-text"
               >
@@ -215,6 +225,31 @@ export default function ContactDrawer() {
                 className="flex flex-col gap-6"
                 noValidate
               >
+                  {/* Honeypot anti-bot: invisible y no enfocable para una persona
+                      real (no usa display:none, que algunos bots evitan), pero
+                      un bot que autorellena todos los inputs del formulario lo
+                      encuentra. Ver comprobación en /api/contact. */}
+                  <div
+                    aria-hidden="true"
+                    style={{
+                      position: "absolute",
+                      width: 1,
+                      height: 1,
+                      overflow: "hidden",
+                      clip: "rect(0 0 0 0)",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    <label htmlFor="company">No rellenar este campo</label>
+                    <input
+                      id="company"
+                      name="company"
+                      type="text"
+                      tabIndex={-1}
+                      autoComplete="off"
+                    />
+                  </div>
+
                   <Field icon={User} label="Nombre completo" htmlFor="name" error={errors.name?.message}>
                     <input
                       id="name"
@@ -318,7 +353,6 @@ export default function ContactDrawer() {
                           href="/politica-de-privacidad"
                           target="_blank"
                           rel="noopener noreferrer"
-                          data-cursor
                           className="text-text underline decoration-line-strong underline-offset-2 transition-colors duration-200 hover:text-tinto"
                         >
                           Política de Privacidad
@@ -343,7 +377,6 @@ export default function ContactDrawer() {
                   <div className="flex justify-center">
                     <SpecularButton
                       type="submit"
-                      data-cursor
                       disabled={isSubmitting || status === "loading"}
                       radius={999}
                       lineColor="#ffffff"
@@ -387,7 +420,6 @@ export default function ContactDrawer() {
               <button
                 type="button"
                 aria-label="Cerrar"
-                data-cursor
                 onClick={handleClose}
                 className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-text-dimmer transition-colors duration-200 hover:bg-white/10 hover:text-text"
               >

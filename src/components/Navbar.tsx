@@ -19,12 +19,10 @@ export default function Navbar() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3 md:pt-4">
-      <motion.nav
-        initial={{ opacity: 0, y: -16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      <nav
+        style={{ "--fade-y": "-16px" } as React.CSSProperties}
         className={cn(
-          "grid h-11 w-full max-w-[280px] grid-cols-[auto_1fr_auto] items-center gap-1.5 rounded-full border border-line px-2 backdrop-blur-xl transition-colors duration-300 md:h-12 md:max-w-xs md:px-2.5",
+          "wama-fade-in grid h-11 w-full max-w-[280px] grid-cols-[auto_1fr_auto] items-center gap-1.5 rounded-full border border-line px-2 backdrop-blur-xl transition-colors duration-300 md:h-12 md:max-w-xs md:px-2.5",
           scrolled ? "bg-bg/80 shadow-[0_8px_30px_rgba(0,0,0,0.35)]" : "bg-bg/40"
         )}
       >
@@ -33,7 +31,6 @@ export default function Navbar() {
           href="https://instagram.com/wama.lab"
           target="_blank"
           rel="noopener noreferrer"
-          data-cursor
           aria-label="Instagram de WAMA"
           radius={999}
           lineColor="#ffffff"
@@ -45,7 +42,6 @@ export default function Navbar() {
 
         <a
           href="#inicio"
-          data-cursor
           onClick={(e) => {
             e.preventDefault();
             document.querySelector("#inicio")?.scrollIntoView({ behavior: "smooth" });
@@ -75,7 +71,6 @@ export default function Navbar() {
         <SpecularButton
           as="a"
           href="mailto:wamastudio.contacto@gmail.com"
-          data-cursor
           aria-label="Email de WAMA"
           radius={999}
           lineColor="#ffffff"
@@ -84,7 +79,7 @@ export default function Navbar() {
         >
           <EnvelopeSimple size={15} />
         </SpecularButton>
-      </motion.nav>
+      </nav>
     </header>
   );
 }

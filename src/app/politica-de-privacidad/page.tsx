@@ -21,7 +21,6 @@ export default function PoliticaDePrivacidadPage() {
           política en{" "}
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            data-cursor
             className="text-text underline decoration-line-strong underline-offset-2 hover:text-tinto"
           >
             {CONTACT_EMAIL}
@@ -80,7 +79,6 @@ export default function PoliticaDePrivacidadPage() {
           y portabilidad de tus datos (derechos ARCO+RGPD) escribiendo a{" "}
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            data-cursor
             className="text-text underline decoration-line-strong underline-offset-2 hover:text-tinto"
           >
             {CONTACT_EMAIL}
@@ -91,7 +89,6 @@ export default function PoliticaDePrivacidadPage() {
             href="https://www.aepd.es"
             target="_blank"
             rel="noopener noreferrer"
-            data-cursor
             className="text-text underline decoration-line-strong underline-offset-2 hover:text-tinto"
           >
             www.aepd.es
@@ -121,7 +118,6 @@ export default function PoliticaDePrivacidadPage() {
           respecto en{" "}
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            data-cursor
             className="text-text underline decoration-line-strong underline-offset-2 hover:text-tinto"
           >
             {CONTACT_EMAIL}

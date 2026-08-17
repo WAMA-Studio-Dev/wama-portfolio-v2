@@ -25,7 +25,6 @@ export default function Footer() {
             href="https://instagram.com/wama.lab"
             target="_blank"
             rel="noopener noreferrer"
-            data-cursor
             aria-label="Instagram de WAMA"
             className="text-text-dimmer transition-colors duration-200 hover:text-text"
           >
@@ -33,7 +32,6 @@ export default function Footer() {
           </a>
           <a
             href="mailto:wamastudio.contacto@gmail.com"
-            data-cursor
             aria-label="Email de WAMA"
             className="text-text-dimmer transition-colors duration-200 hover:text-text"
           >
@@ -50,35 +48,30 @@ export default function Footer() {
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-6 gap-y-2 px-6 py-5 md:px-10">
           <Link
             href="/aviso-legal"
-            data-cursor
             className="font-mono-wama text-[11px] uppercase tracking-[0.1em] text-text-dimmer transition-colors duration-200 hover:text-text"
           >
             Aviso Legal
           </Link>
           <Link
             href="/terminos-y-condiciones"
-            data-cursor
             className="font-mono-wama text-[11px] uppercase tracking-[0.1em] text-text-dimmer transition-colors duration-200 hover:text-text"
           >
             Términos y Condiciones
           </Link>
           <Link
             href="/politica-de-privacidad"
-            data-cursor
             className="font-mono-wama text-[11px] uppercase tracking-[0.1em] text-text-dimmer transition-colors duration-200 hover:text-text"
           >
             Política de Privacidad
           </Link>
           <Link
             href="/politica-de-cookies"
-            data-cursor
             className="font-mono-wama text-[11px] uppercase tracking-[0.1em] text-text-dimmer transition-colors duration-200 hover:text-text"
           >
             Política de Cookies
           </Link>
           <button
             type="button"
-            data-cursor
             onClick={openSettings}
             className="font-mono-wama text-[11px] uppercase tracking-[0.1em] text-text-dimmer transition-colors duration-200 hover:text-text"
           >

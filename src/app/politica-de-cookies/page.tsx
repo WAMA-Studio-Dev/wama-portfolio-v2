@@ -113,7 +113,6 @@ export default function PoliticaDeCookiesPage() {
           escribirnos a{" "}
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            data-cursor
             className="text-text underline decoration-line-strong underline-offset-2 hover:text-tinto"
           >
             {CONTACT_EMAIL}

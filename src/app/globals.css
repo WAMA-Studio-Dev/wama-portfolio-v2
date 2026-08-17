@@ -58,25 +58,25 @@ body {
   opacity: 1;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  html.has-custom-cursor,
-  html.has-custom-cursor * {
-    cursor: none !important;
+/* Entrada por CSS puro (no Framer Motion) para elementos por encima del
+   pliegue que se montan en la carga inicial (Navbar, Hero): la animación
+   arranca en cuanto el navegador pinta el elemento, sin esperar a que
+   React hidrate ni a que corra ningún efecto — así nunca se queda "pillada"
+   con opacity:0 si la hidratación tarda (bundle pesado, conexión lenta). */
+@keyframes wama-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--fade-y, 14px));
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-  /* El puntero personalizado se apaga sobre campos editables (ver
-     CustomCursor.tsx), así que aquí se restaura el cursor nativo del
-     sistema para que nunca desaparezca al escribir. */
-  html.has-custom-cursor input,
-  html.has-custom-cursor textarea,
-  html.has-custom-cursor [contenteditable="true"] {
-    cursor: text !important;
-  }
-
-  html.has-custom-cursor select,
-  html.has-custom-cursor option {
-    cursor: pointer !important;
-  }
+.wama-fade-in {
+  animation: wama-fade-in 0.7s var(--ease-premium) both;
+  animation-delay: var(--fade-delay, 0s);
 }
 
 @media (prefers-reduced-motion: reduce) {

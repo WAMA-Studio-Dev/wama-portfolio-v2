@@ -74,7 +74,6 @@ export default function CookieConsent() {
               Puedes leer más en nuestra{" "}
               <Link
                 href="/politica-de-cookies"
-                data-cursor
                 className="text-text underline decoration-line-strong underline-offset-2 transition-colors duration-200 hover:text-tinto"
               >
                 Política de Cookies
@@ -85,7 +84,6 @@ export default function CookieConsent() {
             <div className="mt-4 flex flex-wrap items-center gap-3">
               <SpecularButton
                 type="button"
-                data-cursor
                 onClick={acceptAll}
                 radius={999}
                 lineColor="#ffffff"
@@ -96,7 +94,6 @@ export default function CookieConsent() {
               </SpecularButton>
               <SpecularButton
                 type="button"
-                data-cursor
                 onClick={rejectOptional}
                 radius={999}
                 lineColor="#ffffff"
@@ -107,7 +104,6 @@ export default function CookieConsent() {
               </SpecularButton>
               <button
                 type="button"
-                data-cursor
                 onClick={handleOpenSettings}
                 className="inline-flex items-center px-2 py-2.5 font-mono-wama text-xs uppercase tracking-[0.1em] text-text-dimmer transition-colors duration-200 hover:text-text"
               >
@@ -151,7 +147,6 @@ export default function CookieConsent() {
                 <button
                   type="button"
                   aria-label="Cerrar"
-                  data-cursor
                   onClick={handleCloseSettings}
                   className="flex h-8 w-8 items-center justify-center rounded-full text-text-dimmer transition-colors duration-200 hover:bg-white/10 hover:text-text"
                 >
@@ -192,7 +187,6 @@ export default function CookieConsent() {
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <SpecularButton
                   type="button"
-                  data-cursor
                   onClick={() => persist(draft)}
                   radius={999}
                   lineColor="#ffffff"
@@ -203,7 +197,6 @@ export default function CookieConsent() {
                 </SpecularButton>
                 <SpecularButton
                   type="button"
-                  data-cursor
                   onClick={acceptAll}
                   radius={999}
                   lineColor="#ffffff"
@@ -259,7 +252,6 @@ function CategoryRow({
         role="switch"
         aria-checked={checked}
         aria-label={title}
-        data-cursor
         disabled={disabled}
         onClick={(e) => {
           e.stopPropagation();

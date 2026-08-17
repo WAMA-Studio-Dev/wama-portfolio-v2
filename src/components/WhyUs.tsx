@@ -110,7 +110,6 @@ function FloatingChip({
   return (
     <motion.button
       type="button"
-      data-cursor
       aria-label={`${reason.title} — ver más`}
       onClick={onToggle}
       className="absolute left-1/2 top-1/2 -ml-6 -mt-6 flex h-12 w-12 items-center justify-center rounded-2xl border border-line bg-fill-ghost transition-colors duration-200 hover:border-line-strong sm:-ml-8 sm:-mt-8 sm:h-16 sm:w-16 md:-ml-9 md:-mt-9 md:h-[72px] md:w-[72px]"
@@ -187,7 +186,6 @@ function FloatingReasons() {
                 <button
                   type="button"
                   aria-label="Cerrar"
-                  data-cursor
                   onClick={() => setExpanded(null)}
                   className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full text-text-dimmer transition-colors duration-200 hover:bg-white/10 hover:text-text"
                 >
@@ -228,7 +226,6 @@ function ProcessRoadmap() {
             <button
               key={step.title}
               type="button"
-              data-cursor
               aria-pressed={active === i}
               aria-label={`Paso ${i + 1}: ${step.title}`}
               onClick={() => setActive(i)}

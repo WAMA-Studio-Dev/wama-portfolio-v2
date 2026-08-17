@@ -61,12 +61,12 @@ export default function Reveal({
       ref={ref}
       className={className}
       initial={false}
+      style={{ willChange: "transform, opacity" }}
       variants={{
-        hidden: { opacity: 0, y, filter: "blur(6px)", transition: { duration: 0 } },
+        hidden: { opacity: 0, y, transition: { duration: 0 } },
         shown: {
           opacity: 1,
           y: 0,
-          filter: "blur(0px)",
           transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] },
         },
       }}

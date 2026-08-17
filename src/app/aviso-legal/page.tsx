@@ -22,7 +22,6 @@ export default function AvisoLegalPage() {
           nosotros a través del correo electrónico{" "}
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            data-cursor
             className="text-text underline decoration-line-strong underline-offset-2 hover:text-tinto"
           >
             {CONTACT_EMAIL}

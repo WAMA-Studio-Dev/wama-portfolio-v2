@@ -150,7 +150,6 @@ export default function Projects() {
                     <div className="mt-4 flex flex-wrap justify-center gap-2">
                       <button
                         type="button"
-                        data-cursor
                         onClick={() => setActive(item)}
                         className={CARD_BUTTON_CLASS}
                       >
@@ -161,7 +160,6 @@ export default function Projects() {
                         href={item.demoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        data-cursor
                         className={CARD_BUTTON_CLASS}
                       >
                         <PlayCircle size={14} weight="bold" />
@@ -172,7 +170,6 @@ export default function Projects() {
                           href={item.codeUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          data-cursor
                           className={CARD_BUTTON_CLASS}
                         >
                           <Code size={14} weight="bold" />
@@ -214,7 +211,6 @@ export default function Projects() {
                 <button
                   type="button"
                   aria-label="Cerrar"
-                  data-cursor
                   onClick={() => setActive(null)}
                   className="ml-auto flex h-7 w-7 items-center justify-center rounded-full text-text-dimmer transition-colors duration-200 hover:bg-white/10 hover:text-text"
                 >
@@ -258,7 +254,6 @@ export default function Projects() {
                   href={active.demoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  data-cursor
                   className="mt-7 inline-flex items-center gap-2 rounded-full bg-tinto px-6 py-3 font-sora text-sm font-semibold text-text transition-transform duration-200 ease-out active:scale-[0.97]"
                 >
                   Ver proyecto

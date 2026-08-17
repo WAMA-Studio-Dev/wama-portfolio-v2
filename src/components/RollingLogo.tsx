@@ -121,7 +121,6 @@ export default function RollingLogo() {
           <motion.button
             key="ball"
             type="button"
-            data-cursor
             aria-label="Descubrir el logo de WAMA"
             onClick={handleBallClick}
             className="absolute left-1/2 top-1/2 -ml-7 -mt-7 h-14 w-14 overflow-hidden rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.35)]"
@@ -202,7 +201,6 @@ export default function RollingLogo() {
 
             <SpecularButton
               type="button"
-              data-cursor
               onClick={open}
               radius={999}
               lineColor="#ffffff"

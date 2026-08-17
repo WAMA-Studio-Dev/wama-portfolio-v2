@@ -8,7 +8,6 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import { Renderer, Program, Mesh, Triangle, Color } from "ogl";
 import "./SpecularButton.css";
 
 const PAD = 20;
@@ -102,20 +101,23 @@ interface SpecularEffectProps {
 }
 
 interface SpecularButtonAsButtonProps
-  extends SpecularEffectProps,
+  extends
+    SpecularEffectProps,
     Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color" | "size"> {
   as?: "button";
   children?: ReactNode;
 }
 
 interface SpecularButtonAsAnchorProps
-  extends SpecularEffectProps,
+  extends
+    SpecularEffectProps,
     Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "color"> {
   as: "a";
   children?: ReactNode;
 }
 
-type SpecularButtonProps = SpecularButtonAsButtonProps | SpecularButtonAsAnchorProps;
+type SpecularButtonProps =
+  SpecularButtonAsButtonProps | SpecularButtonAsAnchorProps;
 
 interface RuntimeProps {
   radius: number;
@@ -202,125 +204,197 @@ export default function SpecularButton({
     const fx = fxRef.current;
     if (!btn || !fx) return;
 
-    const dpr = window.devicePixelRatio || 1;
-    const renderer = new Renderer({ alpha: true, premultipliedAlpha: true, antialias: true, dpr });
-    const gl = renderer.gl;
-    gl.clearColor(0, 0, 0, 0);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    let active = true;
+    let cleanupEffect: (() => void) | null = null;
 
-    const geometry = new Triangle(gl);
-    if (geometry.attributes.uv) delete geometry.attributes.uv;
+    const setupEffect = ({
+      Renderer,
+      Program,
+      Mesh,
+      Triangle,
+      Color,
+    }: Pick<
+      typeof import("ogl"),
+      "Renderer" | "Program" | "Mesh" | "Triangle" | "Color"
+    >) => {
+      const dpr = window.devicePixelRatio || 1;
+      const renderer = new Renderer({
+        alpha: true,
+        premultipliedAlpha: true,
+        antialias: true,
+        dpr,
+      });
+      const gl = renderer.gl;
+      gl.clearColor(0, 0, 0, 0);
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
-    const program = new Program(gl, {
-      vertex: VERT,
-      fragment: FRAG,
-      uniforms: {
-        uCenter: { value: [0, 0] },
-        uHalfSize: { value: [1, 1] },
-        uRadius: { value: 0 },
-        uAngle: { value: 2.4 },
-        uPx: { value: dpr },
-        uLineColor: { value: [1, 1, 1] },
-        uBaseColor: { value: [0.32, 0.32, 0.32] },
-        uIntensity: { value: 1 },
-        uShineSize: { value: 0.17 },
-        uShineFade: { value: 0.7 },
-        uThickness: { value: 1 },
-        uBaseWidth: { value: dpr },
-      },
-    });
+      const geometry = new Triangle(gl);
+      if (geometry.attributes.uv) delete geometry.attributes.uv;
 
-    const mesh = new Mesh(gl, { geometry, program });
-    fx.appendChild(gl.canvas);
+      const program = new Program(gl, {
+        vertex: VERT,
+        fragment: FRAG,
+        uniforms: {
+          uCenter: { value: [0, 0] },
+          uHalfSize: { value: [1, 1] },
+          uRadius: { value: 0 },
+          uAngle: { value: 2.4 },
+          uPx: { value: dpr },
+          uLineColor: { value: [1, 1, 1] },
+          uBaseColor: { value: [0.32, 0.32, 0.32] },
+          uIntensity: { value: 1 },
+          uShineSize: { value: 0.17 },
+          uShineFade: { value: 0.7 },
+          uThickness: { value: 1 },
+          uBaseWidth: { value: dpr },
+        },
+      });
 
-    const sizeRef = { w: 1, h: 1 };
-    const resize = () => {
-      // Fractional size + explicit center keep the SDF pinned to the exact
-      // CSS border, instead of drifting up to a pixel from offsetWidth rounding.
-      const rect = btn.getBoundingClientRect();
-      const w = rect.width;
-      const h = rect.height;
-      sizeRef.w = w;
-      sizeRef.h = h;
-      renderer.setSize(w + PAD * 2, h + PAD * 2);
-      program.uniforms.uCenter.value = [(PAD + w / 2) * dpr, (PAD + h / 2) * dpr];
-      program.uniforms.uHalfSize.value = [(w / 2) * dpr, (h / 2) * dpr];
-    };
-    const ro = new ResizeObserver(resize);
-    ro.observe(btn);
-    resize();
+      const mesh = new Mesh(gl, { geometry, program });
+      fx.appendChild(gl.canvas);
 
-    // Light angle steers toward the pointer (anywhere on the page) and falls
-    // back to a slow sweep when the pointer hasn't moved yet.
-    let pointerAngle: number | null = null;
-    let proximityT = 0;
-    const onPointerMove = (e: PointerEvent) => {
-      const rect = btn.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dx = Math.max(rect.left - e.clientX, 0, e.clientX - rect.right);
-      const dy = Math.max(rect.top - e.clientY, 0, e.clientY - rect.bottom);
-      const dist = Math.hypot(dx, dy);
-      // Over the button itself the light settles on the diagonal (framing the
-      // corners) and gently sways with the cursor position within the button.
-      if (dist === 0) {
-        const nx = (e.clientX - cx) / (rect.width / 2);
-        const ny = (cy - e.clientY) / (rect.height / 2);
-        pointerAngle = Math.atan2(2 / rect.height, -2 / rect.width) + nx * 0.3 + ny * 0.15;
-      } else {
-        pointerAngle = Math.atan2(cy - e.clientY, e.clientX - cx);
-      }
-      const t = Math.max(0, 1 - dist / Math.max(propsRef.current.proximity, 1));
-      proximityT = t * t * (3 - 2 * t);
-    };
-    window.addEventListener("pointermove", onPointerMove);
+      const sizeRef = { w: 1, h: 1 };
+      const resize = () => {
+        // Fractional size + explicit center keep the SDF pinned to the exact
+        // CSS border, instead of drifting up to a pixel from offsetWidth rounding.
+        const rect = btn.getBoundingClientRect();
+        const w = rect.width;
+        const h = rect.height;
+        sizeRef.w = w;
+        sizeRef.h = h;
+        renderer.setSize(w + PAD * 2, h + PAD * 2);
+        program.uniforms.uCenter.value = [
+          (PAD + w / 2) * dpr,
+          (PAD + h / 2) * dpr,
+        ];
+        program.uniforms.uHalfSize.value = [(w / 2) * dpr, (h / 2) * dpr];
+      };
+      const ro = new ResizeObserver(resize);
+      ro.observe(btn);
+      resize();
 
-    let angle = 2.4;
-    let idleAngle = 2.4;
-    let bright = 0;
-    let last = performance.now();
-    let raf = 0;
+      // Light angle steers toward the pointer (anywhere on the page) and falls
+      // back to a slow sweep when the pointer hasn't moved yet.
+      let pointerAngle: number | null = null;
+      let proximityT = 0;
+      // El cálculo (incluida la lectura de layout de getBoundingClientRect)
+      // se agrupa a un máximo de una vez por frame: escuchar "pointermove" sin
+      // limitar dispara este handler en cada evento nativo (que puede llegar
+      // muy por encima de 60Hz en trackpads/ratones de alto polling), y con
+      // varios SpecularButton montados a la vez eso multiplicaba lecturas de
+      // layout forzadas y ralentizaba el resto de la interacción (cursor,
+      // campos del formulario).
+      let pointerMoveRaf = 0;
+      let pendingEvent: PointerEvent | null = null;
+      const processPointerMove = () => {
+        pointerMoveRaf = 0;
+        const e = pendingEvent;
+        if (!e) return;
+        const rect = btn.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = Math.max(rect.left - e.clientX, 0, e.clientX - rect.right);
+        const dy = Math.max(rect.top - e.clientY, 0, e.clientY - rect.bottom);
+        const dist = Math.hypot(dx, dy);
+        // Over the button itself the light settles on the diagonal (framing the
+        // corners) and gently sways with the cursor position within the button.
+        if (dist === 0) {
+          const nx = (e.clientX - cx) / (rect.width / 2);
+          const ny = (cy - e.clientY) / (rect.height / 2);
+          pointerAngle =
+            Math.atan2(2 / rect.height, -2 / rect.width) + nx * 0.3 + ny * 0.15;
+        } else {
+          pointerAngle = Math.atan2(cy - e.clientY, e.clientX - cx);
+        }
+        const t = Math.max(
+          0,
+          1 - dist / Math.max(propsRef.current.proximity, 1),
+        );
+        proximityT = t * t * (3 - 2 * t);
+      };
+      const onPointerMove = (e: PointerEvent) => {
+        pendingEvent = e;
+        if (pointerMoveRaf) return;
+        pointerMoveRaf = requestAnimationFrame(processPointerMove);
+      };
+      window.addEventListener("pointermove", onPointerMove, { passive: true });
 
-    const lineC = new Color();
-    const baseC = new Color();
+      let angle = 2.4;
+      let idleAngle = 2.4;
+      let bright = 0;
+      let last = performance.now();
+      let raf = 0;
 
-    const update = (now: number) => {
+      const lineC = new Color();
+      const baseC = new Color();
+
+      const update = (now: number) => {
+        raf = requestAnimationFrame(update);
+        const dt = Math.min((now - last) / 1000, 0.05);
+        last = now;
+        const p = propsRef.current;
+
+        idleAngle += p.speed * dt;
+        const steer =
+          p.followMouse &&
+          pointerAngle != null &&
+          (!p.autoAnimate || proximityT > 0);
+        const target = steer ? pointerAngle! : idleAngle;
+        const diff = ((target - angle + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+        angle += diff * (1 - Math.exp(-dt * 7));
+
+        // Shine fades in with pointer proximity unless autoAnimate keeps it on
+        const brightTarget = p.autoAnimate ? 1 : proximityT;
+        bright += (brightTarget - bright) * (1 - Math.exp(-dt * 8));
+
+        lineC.set(p.lineColor);
+        baseC.set(p.baseColor);
+        program.uniforms.uAngle.value = angle;
+        program.uniforms.uRadius.value =
+          Math.min(p.radius, Math.min(sizeRef.w, sizeRef.h) / 2) * dpr;
+        program.uniforms.uLineColor.value = [lineC.r, lineC.g, lineC.b];
+        program.uniforms.uBaseColor.value = [baseC.r, baseC.g, baseC.b];
+        program.uniforms.uIntensity.value = p.intensity * bright;
+        program.uniforms.uShineSize.value = (p.shineSize * Math.PI) / 180;
+        program.uniforms.uShineFade.value = (p.shineFade * Math.PI) / 180;
+        program.uniforms.uThickness.value = p.thickness * dpr;
+        renderer.render({ scene: mesh });
+      };
       raf = requestAnimationFrame(update);
-      const dt = Math.min((now - last) / 1000, 0.05);
-      last = now;
-      const p = propsRef.current;
 
-      idleAngle += p.speed * dt;
-      const steer = p.followMouse && pointerAngle != null && (!p.autoAnimate || proximityT > 0);
-      const target = steer ? pointerAngle! : idleAngle;
-      const diff = ((target - angle + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
-      angle += diff * (1 - Math.exp(-dt * 7));
-
-      // Shine fades in with pointer proximity unless autoAnimate keeps it on
-      const brightTarget = p.autoAnimate ? 1 : proximityT;
-      bright += (brightTarget - bright) * (1 - Math.exp(-dt * 8));
-
-      lineC.set(p.lineColor);
-      baseC.set(p.baseColor);
-      program.uniforms.uAngle.value = angle;
-      program.uniforms.uRadius.value = Math.min(p.radius, Math.min(sizeRef.w, sizeRef.h) / 2) * dpr;
-      program.uniforms.uLineColor.value = [lineC.r, lineC.g, lineC.b];
-      program.uniforms.uBaseColor.value = [baseC.r, baseC.g, baseC.b];
-      program.uniforms.uIntensity.value = p.intensity * bright;
-      program.uniforms.uShineSize.value = (p.shineSize * Math.PI) / 180;
-      program.uniforms.uShineFade.value = (p.shineFade * Math.PI) / 180;
-      program.uniforms.uThickness.value = p.thickness * dpr;
-      renderer.render({ scene: mesh });
+      return () => {
+        cancelAnimationFrame(raf);
+        if (pointerMoveRaf) cancelAnimationFrame(pointerMoveRaf);
+        ro.disconnect();
+        window.removeEventListener("pointermove", onPointerMove);
+        if (gl.canvas.parentNode === fx) fx.removeChild(gl.canvas);
+        gl.getExtension("WEBGL_lose_context")?.loseContext();
+      };
     };
-    raf = requestAnimationFrame(update);
+
+    // `ogl` (~130KB) se importa de forma dinámica en vez de estática: este
+    // componente se usa en botones que aparecen en la carga inicial de
+    // TODAS las páginas (Navbar, Hero...), así que una importación estática
+    // metía esas ~130KB en el bundle crítico necesario para hidratar,
+    // retrasando que el resto de la página se volviera interactiva. El
+    // botón en sí (texto, estilos, click) no depende de `ogl` en absoluto;
+    // solo la capa de brillo lo necesita, así que puede llegar un instante
+    // después sin que se note.
+    import("ogl")
+      .then(({ Renderer, Program, Mesh, Triangle, Color }) => {
+        if (!active) return;
+        cleanupEffect = setupEffect({ Renderer, Program, Mesh, Triangle, Color });
+      })
+      .catch((err) => {
+        // Un fallo de red/carga del chunk no debe dejar nada colgado: el
+        // botón real ya está pintado y es funcional sin la capa de brillo.
+        console.error("SpecularButton: no se pudo cargar ogl", err);
+      });
 
     return () => {
-      cancelAnimationFrame(raf);
-      ro.disconnect();
-      window.removeEventListener("pointermove", onPointerMove);
-      if (gl.canvas.parentNode === fx) fx.removeChild(gl.canvas);
-      gl.getExtension("WEBGL_lose_context")?.loseContext();
+      active = false;
+      cleanupEffect?.();
     };
   }, []);
 
@@ -344,11 +418,15 @@ export default function SpecularButton({
    * componente compite nunca por las mismas propiedades CSS.
    */
   const label = (
-    <span className={`specular-button__label${className ? ` ${className}` : ""}`}>
+    <span
+      className={`specular-button__label${className ? ` ${className}` : ""}`}
+    >
       {children}
     </span>
   );
-  const fx = <span ref={fxRef} className="specular-button__fx" aria-hidden="true" />;
+  const fx = (
+    <span ref={fxRef} className="specular-button__fx" aria-hidden="true" />
+  );
 
   if (rest && "as" in rest && (rest as { as?: "a" }).as === "a") {
     const { as: _as, ...anchorRest } = rest as SpecularButtonAsAnchorProps;
@@ -366,7 +444,11 @@ export default function SpecularButton({
     );
   }
 
-  const { as: _as, type = "button", ...buttonRest } = rest as SpecularButtonAsButtonProps;
+  const {
+    as: _as,
+    type = "button",
+    ...buttonRest
+  } = rest as SpecularButtonAsButtonProps;
   void _as;
   return (
     <button

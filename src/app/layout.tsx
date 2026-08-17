@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Sora, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
-import CustomCursor from "@/components/CustomCursor";
 import ContactDrawer from "@/components/ContactDrawer";
 import CookieConsent from "@/components/CookieConsent";
 import GoogleAnalyticsGate from "@/components/GoogleAnalyticsGate";
@@ -25,6 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://wamastudio.com"),
   title: "WAMA® — Web & Creative Studio",
   description:
     "Diseñamos y construimos sistemas web de alto rendimiento que escalan y convierten. Código 100% a medida, cero plantillas.",
@@ -58,7 +58,6 @@ export default function RootLayout({
         <GlobalStarfield />
         <ContactDrawerProvider>
           <CookieConsentProvider>
-            <CustomCursor />
             {children}
             <ContactDrawer />
             <CookieConsent />

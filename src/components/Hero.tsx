@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import dynamic from "next/dynamic";
 import {
   motion,
@@ -25,16 +25,23 @@ export default function Hero() {
   const reduce = useReducedMotion();
   const { open } = useContactDrawer();
 
+  // Identidad estable entre renders: si no, FloatingLines (cuyo efecto
+  // depende de estas props) destruiría y recrearía todo el contexto WebGL
+  // cada vez que Hero se re-renderiza, aunque el valor no haya cambiado.
+  const floatingLinesWaves = useMemo(
+    () => ["top" as const, "middle" as const, "bottom" as const],
+    []
+  );
+  const floatingLinesGradient = useMemo(
+    () => ["#4d1017", "#7a1a24", "#ff3b52"],
+    []
+  );
+
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
 
-  const scale = useTransform(
-    scrollYProgress,
-    [0, 1],
-    reduce ? [1, 1] : [1, 0.92]
-  );
   const borderRadius = useTransform(
     scrollYProgress,
     [0, 1],
@@ -52,7 +59,7 @@ export default function Hero() {
       className="relative flex min-h-[100dvh] w-full items-center bg-bg"
     >
       <motion.div
-        style={{ scale, borderRadius, willChange: "transform" }}
+        style={{ borderRadius, willChange: "transform" }}
         className="relative flex min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-bg"
       >
         {/* Líneas flotantes (three.js) sobre las partículas de fondo.
@@ -67,7 +74,7 @@ export default function Hero() {
             style={{ inset: "-170px" }}
           />
           <FloatingLines
-            enabledWaves={["top", "middle", "bottom"]}
+            enabledWaves={floatingLinesWaves}
             lineCount={6}
             lineDistance={6}
             bendRadius={6}
@@ -76,7 +83,7 @@ export default function Hero() {
             parallax
             parallaxStrength={0.15}
             animationSpeed={0.8}
-            linesGradient={["#4d1017", "#7a1a24", "#ff3b52"]}
+            linesGradient={floatingLinesGradient}
             mixBlendMode="screen"
             className="absolute inset-0 floating-lines-fade-bottom"
           />
@@ -104,14 +111,12 @@ export default function Hero() {
         />
 
         <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center px-6 pt-24 pb-16 text-center md:px-10">
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-4 font-mono-wama text-[11px] uppercase tracking-[0.22em] text-tinto"
+          <p
+            style={{ "--fade-delay": "0.2s" } as React.CSSProperties}
+            className="wama-fade-in mb-4 font-mono-wama text-[11px] uppercase tracking-[0.22em] text-tinto"
           >
             Desarrollo web a medida
-          </motion.p>
+          </p>
 
           <CmdTypewriter
             as="h1"
@@ -123,25 +128,20 @@ export default function Hero() {
             className="text-center font-sora text-3xl font-semibold leading-[1.08] tracking-tighter text-text sm:text-4xl lg:text-5xl xl:text-6xl"
           />
 
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-6 max-w-xl text-base leading-relaxed text-text-dim"
+          <p
+            style={{ "--fade-delay": "0.55s" } as React.CSSProperties}
+            className="wama-fade-in mt-6 max-w-xl text-base leading-relaxed text-text-dim"
           >
             Construimos arquitectura web de alto rendimiento para marcas
             que no se conforman con plantillas.
-          </motion.p>
+          </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.68, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-9 flex flex-wrap items-center justify-center gap-4"
+          <div
+            style={{ "--fade-delay": "0.68s" } as React.CSSProperties}
+            className="wama-fade-in mt-9 flex flex-wrap items-center justify-center gap-4"
           >
             <SpecularButton
               type="button"
-              data-cursor
               onClick={open}
               radius={999}
               lineColor="#ffffff"
@@ -158,7 +158,6 @@ export default function Hero() {
             <SpecularButton
               as="a"
               href="#proyectos"
-              data-cursor
               radius={999}
               lineColor="#ffffff"
               textColor="var(--text-dim)"
@@ -166,7 +165,7 @@ export default function Hero() {
             >
               Ver Proyectos
             </SpecularButton>
-          </motion.div>
+          </div>
         </div>
       </motion.div>
     </section>
