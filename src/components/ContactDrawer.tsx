@@ -76,6 +76,8 @@ export default function ContactDrawer() {
   const handleClose = () => {
     close();
     returnFocus();
+    setStatus("idle");
+    setErrorMessage("");
   };
 
   useEffect(() => {
@@ -208,28 +210,11 @@ export default function ContactDrawer() {
             </div>
 
             <div className="flex-1 px-6 py-6">
-              {status === "success" ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex items-center gap-3 rounded-2xl border border-line bg-fill-ghost px-6 py-8"
-                >
-                  <CheckCircle
-                    size={22}
-                    weight="fill"
-                    className="shrink-0 text-tinto"
-                  />
-                  <p className="text-sm text-text">
-                    Mensaje enviado. Te responderemos muy pronto a tu correo.
-                  </p>
-                </motion.div>
-              ) : (
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="flex flex-col gap-6"
-                  noValidate
-                >
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="flex flex-col gap-6"
+                noValidate
+              >
                   <Field icon={User} label="Nombre completo" htmlFor="name" error={errors.name?.message}>
                     <input
                       id="name"
@@ -355,26 +340,75 @@ export default function ContactDrawer() {
                     </div>
                   )}
 
-                  <SpecularButton
-                    type="submit"
-                    data-cursor
-                    disabled={isSubmitting || status === "loading"}
-                    radius={999}
-                    lineColor="#ffffff"
-                    textColor="var(--text)"
-                    className={cn(
-                      "inline-flex w-fit items-center gap-2 rounded-full bg-tinto px-7 py-3.5 font-sora text-sm font-semibold text-text transition-transform duration-200 ease-out active:scale-[0.97] disabled:opacity-60"
-                    )}
-                  >
-                    {status === "loading" ? "Enviando..." : "Enviar mensaje"}
-                  </SpecularButton>
+                  <div className="flex justify-center">
+                    <SpecularButton
+                      type="submit"
+                      data-cursor
+                      disabled={isSubmitting || status === "loading"}
+                      radius={999}
+                      lineColor="#ffffff"
+                      textColor="var(--text)"
+                      className={cn(
+                        "inline-flex w-fit items-center gap-2 rounded-full bg-tinto px-7 py-3.5 font-sora text-sm font-semibold text-text transition-transform duration-200 ease-out active:scale-[0.97] disabled:opacity-60"
+                      )}
+                    >
+                      {status === "loading" ? "Enviando..." : "Enviar mensaje"}
+                    </SpecularButton>
+                  </div>
                 </form>
-              )}
-            </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+
+        {isOpen && status === "success" && (
+          <motion.div
+            key="success-modal"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-[120] flex items-center justify-center p-4"
+          >
+            <div
+              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+              onClick={handleClose}
+            />
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="success-modal-title"
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-full max-w-sm rounded-2xl border border-line bg-[#111113] p-8 text-center shadow-[0_0_60px_rgba(0,0,0,0.5)]"
+            >
+              <button
+                type="button"
+                aria-label="Cerrar"
+                data-cursor
+                onClick={handleClose}
+                className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-text-dimmer transition-colors duration-200 hover:bg-white/10 hover:text-text"
+              >
+                <X size={16} />
+              </button>
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-tinto/10">
+                <CheckCircle size={32} weight="fill" className="text-tinto" />
+              </div>
+              <h3
+                id="success-modal-title"
+                className="font-sora text-lg font-semibold text-text"
+              >
+                ¡Mensaje enviado!
+              </h3>
+              <p className="mt-2 text-sm text-text-dim">
+                Te responderemos en menos de 24-48h.
+              </p>
+            </motion.div>
           </motion.div>
-        </div>
-      )}
-    </AnimatePresence>,
+        )}
+      </AnimatePresence>,
     document.body
   );
 }

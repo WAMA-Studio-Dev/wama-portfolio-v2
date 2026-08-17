@@ -2,7 +2,7 @@ import { Resend } from "resend";
 import { contactSchema } from "@/lib/contact-schema";
 
 const CONTACT_RECIPIENT = "wamastudio.contacto@gmail.com";
-const FROM_ADDRESS = "WAMA Studio <onboarding@resend.dev>";
+const FROM_ADDRESS = "WAMA Studio <contacto@wamastudio.com>";
 
 function escapeHtml(value: string) {
   return value
