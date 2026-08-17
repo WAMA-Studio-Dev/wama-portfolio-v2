@@ -4,69 +4,36 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { X } from "@phosphor-icons/react/dist/ssr";
-import { useCookieConsent } from "@/lib/cookie-consent-context";
+import {
+  useCookieConsent,
+  type CookiePreferences,
+} from "@/lib/cookie-consent-context";
 import SpecularButton from "./ui/SpecularButton";
 
-const STORAGE_KEY = "wama-cookie-consent";
-
-interface Preferences {
-  necessary: true;
-  analytics: boolean;
-  marketing: boolean;
-}
-
-const DEFAULT_PREFERENCES: Preferences = {
-  necessary: true,
-  analytics: false,
-  marketing: false,
-};
-
-function readStoredPreferences(): Preferences | null {
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as Partial<Preferences>;
-    if (
-      typeof parsed.analytics === "boolean" &&
-      typeof parsed.marketing === "boolean"
-    ) {
-      return {
-        necessary: true,
-        analytics: parsed.analytics,
-        marketing: parsed.marketing,
-      };
-    }
-  } catch {
-    // localStorage corrupto o inaccesible: se trata como "sin decisión".
-  }
-  return null;
-}
-
 export default function CookieConsent() {
-  const { settingsOpen, openSettings, closeSettings } = useCookieConsent();
+  const {
+    settingsOpen,
+    openSettings,
+    closeSettings,
+    initialized,
+    hasDecision,
+    preferences,
+    savePreferences,
+  } = useCookieConsent();
   const [bannerVisible, setBannerVisible] = useState(false);
-  const [hasDecision, setHasDecision] = useState(false);
-  const [draft, setDraft] = useState<Preferences>(DEFAULT_PREFERENCES);
+  const [draft, setDraft] = useState<CookiePreferences>(preferences);
 
   useEffect(() => {
+    if (!initialized || hasDecision) return;
     // Diferido a un timer (no síncrono en el efecto) para no encadenar
     // un re-render inmediato en el commit.
-    const id = setTimeout(() => {
-      const stored = readStoredPreferences();
-      if (stored) {
-        setDraft(stored);
-        setHasDecision(true);
-      } else {
-        setBannerVisible(true);
-      }
-    }, 0);
+    const id = setTimeout(() => setBannerVisible(true), 0);
     return () => clearTimeout(id);
-  }, []);
+  }, [initialized, hasDecision]);
 
-  const persist = (prefs: Preferences) => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+  const persist = (prefs: CookiePreferences) => {
+    savePreferences(prefs);
     setDraft(prefs);
-    setHasDecision(true);
     setBannerVisible(false);
     closeSettings();
   };
@@ -77,7 +44,7 @@ export default function CookieConsent() {
     persist({ necessary: true, analytics: false, marketing: false });
 
   const handleOpenSettings = () => {
-    setDraft(readStoredPreferences() ?? DEFAULT_PREFERENCES);
+    setDraft(preferences);
     openSettings();
   };
 
@@ -206,7 +173,7 @@ export default function CookieConsent() {
                 />
                 <CategoryRow
                   title="Analíticas"
-                  description="Nos ayudan a entender cómo se usa la web para mejorarla. Actualmente no están en uso."
+                  description="Nos ayudan a entender cómo se usa la web para mejorarla (Google Analytics)."
                   checked={draft.analytics}
                   onChange={(checked) =>
                     setDraft((d) => ({ ...d, analytics: checked }))

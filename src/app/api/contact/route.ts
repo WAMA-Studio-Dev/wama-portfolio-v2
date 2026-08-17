@@ -2,7 +2,14 @@ import { Resend } from "resend";
 import { contactSchema } from "@/lib/contact-schema";
 
 const CONTACT_RECIPIENT = "wamastudio.contacto@gmail.com";
-const FROM_ADDRESS = "WAMA Studio <contacto@wamastudio.com>";
+const FROM_ADDRESS = "WAMA Studio <hola@wamastudio.com>";
+
+function describeError(err: unknown) {
+  if (err instanceof Error) {
+    return { name: err.name, message: err.message, stack: err.stack };
+  }
+  return err;
+}
 
 function escapeHtml(value: string) {
   return value
@@ -109,10 +116,17 @@ function clientConfirmationHtml(name: string) {
 }
 
 export async function POST(request: Request) {
-  const body = await request.json().catch(() => null);
+  const body = await request.json().catch((err) => {
+    console.error("[contact] Body no es JSON válido:", err);
+    return null;
+  });
   const parsed = contactSchema.safeParse(body);
 
   if (!parsed.success) {
+    console.error(
+      "[contact] Validación de Zod fallida:",
+      JSON.stringify(parsed.error.issues, null, 2)
+    );
     return Response.json(
       { error: "Datos de formulario inválidos." },
       { status: 400 }
@@ -121,6 +135,10 @@ export async function POST(request: Request) {
 
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
+    console.error(
+      "[contact] RESEND_API_KEY no está definida en process.env. " +
+        "Revisa que exista en .env.local y reinicia `next dev` para que se recargue."
+    );
     return Response.json(
       { error: "RESEND_API_KEY no configurada en el servidor." },
       { status: 500 }
@@ -131,8 +149,8 @@ export async function POST(request: Request) {
 
   try {
     const resend = new Resend(apiKey);
-    // TODO(WAMA): cambiar "from" a un dominio propio verificado en Resend
-    // (onboarding@resend.dev solo funciona para pruebas).
+    // wamastudio.com debe estar verificado en Resend (Domains) para que
+    // el envío desde FROM_ADDRESS no sea rechazado.
     const [internalResult, confirmationResult] = await Promise.allSettled([
       resend.emails.send({
         from: FROM_ADDRESS,
@@ -172,6 +190,12 @@ export async function POST(request: Request) {
       (internalResult.status === "fulfilled" && internalResult.value.error);
 
     if (internalFailed) {
+      console.error(
+        "[contact] Fallo al enviar el email interno vía Resend:",
+        internalResult.status === "rejected"
+          ? describeError(internalResult.reason)
+          : internalResult.value.error
+      );
       return Response.json(
         { error: "No se pudo enviar el mensaje. Inténtalo de nuevo." },
         { status: 502 }
@@ -180,18 +204,19 @@ export async function POST(request: Request) {
 
     if (confirmationResult.status === "rejected") {
       console.error(
-        "No se pudo enviar el email de confirmación al cliente:",
-        confirmationResult.reason
+        "[contact] No se pudo enviar el email de confirmación al cliente:",
+        describeError(confirmationResult.reason)
       );
     } else if (confirmationResult.value.error) {
       console.error(
-        "No se pudo enviar el email de confirmación al cliente:",
+        "[contact] No se pudo enviar el email de confirmación al cliente:",
         confirmationResult.value.error
       );
     }
 
     return Response.json({ ok: true });
-  } catch {
+  } catch (err) {
+    console.error("[contact] Excepción no controlada al enviar:", describeError(err));
     return Response.json(
       { error: "No se pudo enviar el mensaje. Inténtalo de nuevo." },
       { status: 500 }
