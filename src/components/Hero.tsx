@@ -15,9 +15,21 @@ import { useContactDrawer } from "@/lib/contact-drawer-context";
 
 // `three` pesa ~600kB: se separa del bundle inicial (no bloquea el LCP del
 // texto/CTAs, que sí van en el HTML servido) y solo tiene sentido en
-// cliente (WebGL), así que va sin SSR.
+// cliente (WebGL), así que va sin SSR. Mientras el chunk descarga, se
+// muestra un fallback estático (mismo tono + glow) para que nunca haya un
+// hueco negro/vacío entre el primer pintado y el canvas real.
 const FloatingLines = dynamic(() => import("./FloatingLines"), {
   ssr: false,
+  loading: () => (
+    <div
+      aria-hidden
+      className="absolute inset-0"
+      style={{
+        background:
+          "radial-gradient(ellipse 70% 55% at 50% 42%, #7a1a24, #0b0b0c 70%)",
+      }}
+    />
+  ),
 });
 
 export default function Hero() {

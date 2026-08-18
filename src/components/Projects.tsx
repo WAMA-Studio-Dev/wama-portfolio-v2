@@ -202,9 +202,9 @@ export default function Projects() {
               exit={{ opacity: 0, y: 10, scale: 0.97, filter: "blur(4px)" }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-[#131315]/90 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_30px_80px_rgba(0,0,0,0.6)] backdrop-blur-2xl"
+              className="relative flex max-h-[85vh] w-full max-w-2xl flex-col overflow-y-auto overflow-x-hidden rounded-2xl border border-white/10 bg-[#131315]/90 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_30px_80px_rgba(0,0,0,0.6)] backdrop-blur-2xl"
             >
-              <div className="flex items-center gap-1.5 border-b border-line px-4 py-3">
+              <div className="sticky top-0 z-10 flex items-center gap-1.5 border-b border-line bg-[#131315]/95 px-4 py-3 backdrop-blur-2xl">
                 <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
                 <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
                 <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
@@ -212,9 +212,9 @@ export default function Projects() {
                   type="button"
                   aria-label="Cerrar"
                   onClick={() => setActive(null)}
-                  className="ml-auto flex h-7 w-7 items-center justify-center rounded-full text-text-dimmer transition-colors duration-200 hover:bg-white/10 hover:text-text"
+                  className="ml-auto flex h-8 w-8 items-center justify-center rounded-full text-text-dimmer transition-colors duration-200 hover:bg-white/10 hover:text-text"
                 >
-                  <X size={14} />
+                  <X size={15} />
                 </button>
               </div>
 

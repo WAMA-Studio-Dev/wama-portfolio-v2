@@ -2,6 +2,7 @@ import { EMAIL_FOOTER_LOGO_BASE64 } from "./email-footer-logo";
 
 // Colores de marca extraídos directamente de public/logo.png.
 const WAMA_RED = "#94192C";
+const WAMA_RED_DARK = "#4a0d16";
 const WAMA_CREAM = "#FFFBE0";
 
 // Estilo general unificado (fondo oscuro + bordes sutiles) del resto del sitio.
@@ -26,7 +27,8 @@ const FONT_FACE = `
     font-display: swap;
   }
 `;
-const HEADER_FONT_STACK = "'FatherGalaxy', Georgia, 'Times New Roman', serif";
+const HEADER_FONT_STACK =
+  "'FatherGalaxy', 'Arial Black', 'Helvetica Neue', Helvetica, Arial, sans-serif";
 
 function escapeHtml(value: string) {
   return value
@@ -59,27 +61,22 @@ function documentShell(title: string, bodyHtml: string) {
 }
 
 /**
- * Cabecera de marca compartida por ambas plantillas: "WAMA STUDIO" como
- * texto centrado (no un bloque de color), con espacio de respiro alrededor
- * y un pequeño acento en el rojo de marca en vez de un panel plano.
+ * Cabecera de marca compartida por ambas plantillas: banner en degradado
+ * granate/burdeos (color sólido de respaldo vía bgcolor/background-color
+ * para clientes que ignoran background-image, degradado real como mejora
+ * progresiva) con "WAMA STUDIO" centrado, en mayúsculas y en negrita.
  */
 function emailHeaderHtml() {
   return `
     <tr>
-      <td align="center" style="padding:44px 24px 0;">
-        <p style="margin:0;font-family:${HEADER_FONT_STACK};font-size:24px;line-height:1.2;font-weight:400;letter-spacing:0.14em;text-transform:uppercase;color:${WAMA_CREAM};">
+      <td
+        align="center"
+        bgcolor="${WAMA_RED_DARK}"
+        style="padding:40px 24px;background-color:${WAMA_RED_DARK};background-image:linear-gradient(135deg, ${WAMA_RED_DARK} 0%, ${WAMA_RED} 100%);"
+      >
+        <p style="margin:0;font-family:${HEADER_FONT_STACK};font-size:26px;line-height:1.2;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:${WAMA_CREAM};">
           WAMA STUDIO
         </p>
-        <table role="presentation" align="center" cellpadding="0" cellspacing="0" style="margin:16px auto 0;">
-          <tr>
-            <td width="32" height="2" bgcolor="${WAMA_RED}" style="background-color:${WAMA_RED};line-height:2px;font-size:2px;">&nbsp;</td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td style="padding:28px 24px 0;">
-        <div style="border-top:1px solid ${BORDER};line-height:0;font-size:0;">&nbsp;</div>
       </td>
     </tr>`;
 }

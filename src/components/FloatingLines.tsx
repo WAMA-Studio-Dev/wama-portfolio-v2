@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import {
-  Clock,
   Mesh,
   OrthographicCamera,
   PlaneGeometry,
@@ -331,19 +330,16 @@ export default function FloatingLines({
     if (!container) return;
 
     let active = true;
-    let cleanupScene: (() => void) | null = null;
 
     // La creación del contexto WebGL + la primera compilación del shader
     // (disparada por el primer renderer.render()) es trabajo síncrono que,
     // si corre en el mismo tick que el montaje/hidratación, bloquea el hilo
-    // principal justo cuando el resto de la página debería estar pintando
-    // (el "congelado" mostrando solo el Hero). Se difiere un frame para que
-    // el navegador pueda pintar primero; el shader sigue compilando de
-    // forma síncrona cuando le toca, pero ya no compite por ese primer pintado.
-    // timeout: si el hilo principal nunca llega a estar "idle" (hay
-    // navegadores/circunstancias donde eso puede tardar mucho), garantiza
-    // que el fondo animado se monte igualmente como mucho en ese plazo, en
-    // vez de quedar esperando indefinidamente.
+    // principal justo cuando el resto de la página (navbar, máquina de
+    // escribir del titular) debería estar haciendo su primer pintado. Se
+    // difiere a un momento idle del navegador para no competir con ese
+    // trabajo; el timeout es un techo corto (no los 500ms originales) para
+    // que, si el hilo nunca queda "idle", el fondo no tarde varios segundos
+    // en aparecer.
     const scheduleIdle = (cb: () => void, options?: { timeout?: number }) =>
       typeof window.requestIdleCallback === "function"
         ? window.requestIdleCallback(cb, options)
@@ -449,7 +445,10 @@ export default function FloatingLines({
       const mesh = new Mesh(geometry, material);
       scene.add(mesh);
 
-      const clock = new Clock();
+      // performance.now()-based en vez de THREE.Clock (deprecado en favor de
+      // THREE.Timer, que vive en three/examples y no aporta nada aquí).
+      const startTime = performance.now();
+      const getElapsedTime = () => (performance.now() - startTime) / 1000;
 
       const setSize = () => {
         if (!active) return;
@@ -488,6 +487,16 @@ export default function FloatingLines({
         const rect = renderer.domElement.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
+
+        // Listener en `window` (ver más abajo) para no depender de qué capa
+        // gana el hit-test dentro del Hero; en cambio, aquí se descarta
+        // manualmente cualquier posición fuera del propio canvas, para que
+        // el ratón solo deforme las líneas mientras está sobre el Hero.
+        if (x < 0 || y < 0 || x > rect.width || y > rect.height) {
+          targetInfluenceRef.current = 0.0;
+          return;
+        }
+
         const dpr = renderer.getPixelRatio();
 
         targetMouseRef.current.set(x * dpr, (rect.height - y) * dpr);
@@ -514,6 +523,12 @@ export default function FloatingLines({
         targetInfluenceRef.current = 0.0;
       };
 
+      // En `window`, no en el contenedor: capas puramente decorativas del
+      // Hero (el degradado que se pinta encima del canvas) interceptaban el
+      // hit-test y el contenedor dejaba de recibir el evento. `window`
+      // siempre lo recibe pase lo que pase encima; el filtrado de "solo
+      // cuando el ratón está sobre el Hero" ya lo hace processPointerMove
+      // comprobando los límites del canvas.
       if (interactive) {
         window.addEventListener("pointermove", handlePointerMove, {
           passive: true,
@@ -525,7 +540,7 @@ export default function FloatingLines({
       const renderLoop = () => {
         if (!active) return;
 
-        uniforms.iTime.value = clock.getElapsedTime();
+        uniforms.iTime.value = getElapsedTime();
 
         if (interactive) {
           currentMouseRef.current.lerp(targetMouseRef.current, mouseDamping);
@@ -571,12 +586,13 @@ export default function FloatingLines({
       };
     };
 
+    let cleanupScene: (() => void) | null = null;
     const idleHandle = scheduleIdle(
       () => {
         if (!active) return;
         cleanupScene = setupScene();
       },
-      { timeout: 500 }
+      { timeout: 150 }
     );
 
     return () => {
