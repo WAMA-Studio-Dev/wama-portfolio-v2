@@ -1,10 +1,3 @@
-import { EMAIL_FOOTER_LOGO_BASE64 } from "./email-footer-logo";
-
-// Colores de marca extraídos directamente de public/logo.png.
-const WAMA_RED = "#94192C";
-const WAMA_RED_DARK = "#4a0d16";
-const WAMA_CREAM = "#FFFBE0";
-
 // Estilo general unificado (fondo oscuro + bordes sutiles) del resto del sitio.
 const BG = "#0b0b0c";
 const CARD_BG = "#111113";
@@ -13,22 +6,6 @@ const TEXT = "#f2e9d8";
 const TEXT_DIM = "#c9c4ba";
 const TEXT_DIMMER = "#9a9a9e";
 const TEXT_FAINT = "#5f5f63";
-
-// Fuente de marca (public/fonts/FatherGalaxy-Regular.otf) vía @font-face
-// con fallback sólido: Apple Mail suele respetar @font-face, Gmail/Outlook
-// lo ignoran silenciosamente y caen a Georgia/serif — nunca queda un hueco
-// en blanco.
-const FONT_FACE = `
-  @font-face {
-    font-family: 'FatherGalaxy';
-    src: url('https://wamastudio.com/fonts/FatherGalaxy-Regular.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-  }
-`;
-const HEADER_FONT_STACK =
-  "'FatherGalaxy', 'Arial Black', 'Helvetica Neue', Helvetica, Arial, sans-serif";
 
 function escapeHtml(value: string) {
   return value
@@ -48,7 +25,6 @@ function documentShell(title: string, bodyHtml: string) {
     <meta name="color-scheme" content="dark" />
     <meta name="supported-color-schemes" content="dark" />
     <title>${escapeHtml(title)}</title>
-    <style>${FONT_FACE}</style>
   </head>
   <body style="margin:0;padding:0;background-color:${BG};">
     <div style="background-color:${BG};padding:32px 16px;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
@@ -61,22 +37,23 @@ function documentShell(title: string, bodyHtml: string) {
 }
 
 /**
- * Cabecera de marca compartida por ambas plantillas: banner en degradado
- * granate/burdeos (color sólido de respaldo vía bgcolor/background-color
- * para clientes que ignoran background-image, degradado real como mejora
- * progresiva) con "WAMA STUDIO" centrado, en mayúsculas y en negrita.
+ * Cabecera de marca compartida por ambas plantillas: banner con el
+ * degradado granate/burdeos y "WAMA STUDIO" ya integrados en la propia
+ * imagen (evita depender de que el cliente de correo respete
+ * background-image o @font-face). Se sirve desde una URL absoluta de
+ * producción — los clientes de correo no tienen acceso al servidor de
+ * Next.js, así que una ruta local o un import no cargarían nada.
  */
 function emailHeaderHtml() {
   return `
     <tr>
-      <td
-        align="center"
-        bgcolor="${WAMA_RED_DARK}"
-        style="padding:40px 24px;background-color:${WAMA_RED_DARK};background-image:linear-gradient(135deg, ${WAMA_RED_DARK} 0%, ${WAMA_RED} 100%);"
-      >
-        <p style="margin:0;font-family:${HEADER_FONT_STACK};font-size:26px;line-height:1.2;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:${WAMA_CREAM};">
-          WAMA STUDIO
-        </p>
+      <td style="padding:0;line-height:0;font-size:0;">
+        <img
+          src="https://wamastudio.com/email/header-wama-studio.png"
+          width="560"
+          alt="WAMA STUDIO"
+          style="display:block;width:100%;max-width:560px;height:auto;border:0;outline:none;text-decoration:none;"
+        />
       </td>
     </tr>`;
 }
@@ -86,9 +63,9 @@ function emailFooterHtml() {
   const year = new Date().getFullYear();
   return `
     <tr>
-      <td align="center" style="padding:28px 24px 32px;border-top:1px solid ${BORDER};">
+      <td align="center" style="padding:40px 24px 32px;border-top:1px solid ${BORDER};">
         <img
-          src="data:image/png;base64,${EMAIL_FOOTER_LOGO_BASE64}"
+          src="https://wamastudio.com/logo.png"
           width="40"
           height="40"
           alt="WAMA"
@@ -184,7 +161,7 @@ export function clientConfirmationHtml(name: string) {
       </td>
     </tr>
     <tr>
-      <td style="padding:8px 28px 24px;">
+      <td style="padding:8px 28px 32px;">
         <p style="margin:0;color:${TEXT_FAINT};font-size:12px;line-height:1.6;">
           WAMA Studio — Ingeniería de software · Diseño web · Dirección creativa
         </p>
