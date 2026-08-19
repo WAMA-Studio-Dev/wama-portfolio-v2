@@ -169,7 +169,7 @@ export default function ContactDrawer() {
   return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[110]">
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-6">
           <motion.div
             key="overlay"
             initial={{ opacity: 0 }}
@@ -185,262 +185,252 @@ export default function ContactDrawer() {
             ref={containerRef}
             role="dialog"
             aria-modal="true"
-            aria-labelledby="contact-drawer-title"
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", stiffness: 340, damping: 34 }}
-            className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-line bg-[#111113] shadow-[0_0_60px_rgba(0,0,0,0.5)]"
+            aria-labelledby="contact-modal-title"
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 12 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-y-auto rounded-[28px] border border-line bg-[#111113] shadow-[0_0_80px_rgba(0,0,0,0.55)]"
           >
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-tinto px-6 py-3 text-xs font-medium leading-relaxed text-text sm:text-sm"
+              className="bg-tinto px-6 py-3 text-xs font-medium leading-relaxed text-text sm:px-8 sm:text-sm"
             >
               ⚡ Estás a punto de escalar la tecnología de tu empresa.
               Hablemos hoy.
             </motion.div>
 
-            <div className="flex items-center justify-between border-b border-line px-6 py-5">
-              <h2
-                id="contact-drawer-title"
-                className="font-sora text-xl font-semibold text-text"
-              >
-                Hablemos de tu proyecto
-              </h2>
+            <div className="flex items-center justify-between border-b border-line px-6 py-5 sm:px-8">
+              <div>
+                <p className="mb-1 font-mono-wama text-[11px] uppercase tracking-[0.22em] text-tinto">
+                  Contacto
+                </p>
+                <h2
+                  id="contact-modal-title"
+                  className="font-sora text-xl font-semibold text-text"
+                >
+                  Hablemos de tu proyecto
+                </h2>
+              </div>
               <button
                 type="button"
                 aria-label="Cerrar"
                 onClick={handleClose}
-                className="flex h-9 w-9 items-center justify-center rounded-full text-text-dimmer transition-colors duration-200 hover:bg-white/10 hover:text-text"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-text-dimmer transition-colors duration-200 hover:bg-white/10 hover:text-text"
               >
                 <X size={18} />
               </button>
             </div>
 
-            <div className="flex-1 px-6 py-6">
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col gap-6"
-                noValidate
-              >
-                  {/* Honeypot anti-bot: invisible y no enfocable para una persona
-                      real (no usa display:none, que algunos bots evitan), pero
-                      un bot que autorellena todos los inputs del formulario lo
-                      encuentra. Ver comprobación en /api/contact. */}
-                  <div
-                    aria-hidden="true"
-                    style={{
-                      position: "absolute",
-                      width: 1,
-                      height: 1,
-                      overflow: "hidden",
-                      clip: "rect(0 0 0 0)",
-                      whiteSpace: "nowrap",
-                    }}
+            <div className="px-6 py-6 sm:px-8">
+              <AnimatePresence mode="wait" initial={false}>
+                {status === "success" ? (
+                  <motion.div
+                    key="success"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    className="flex flex-col items-center py-6 text-center"
                   >
-                    <label htmlFor="company">No rellenar este campo</label>
-                    <input
-                      id="company"
-                      name="company"
-                      type="text"
-                      tabIndex={-1}
-                      autoComplete="off"
-                    />
-                  </div>
-
-                  <Field icon={User} label="Nombre completo" htmlFor="name" error={errors.name?.message}>
-                    <input
-                      id="name"
-                      type="text"
-                      {...register("name")}
-                      className="w-full border-b border-line bg-transparent py-2 pl-6 text-base text-text outline-none transition-colors duration-200 focus:border-tinto"
-                    />
-                  </Field>
-
-                  <Field icon={EnvelopeSimple} label="Email" htmlFor="email" error={errors.email?.message}>
-                    <input
-                      id="email"
-                      type="email"
-                      {...register("email")}
-                      className="w-full border-b border-line bg-transparent py-2 pl-6 text-base text-text outline-none transition-colors duration-200 focus:border-tinto"
-                    />
-                  </Field>
-
-                  <Field icon={Phone} label="Teléfono" htmlFor="phone" error={errors.phone?.message}>
-                    <input
-                      id="phone"
-                      type="tel"
-                      {...register("phone")}
-                      className="w-full border-b border-line bg-transparent py-2 pl-6 text-base text-text outline-none transition-colors duration-200 focus:border-tinto"
-                    />
-                  </Field>
-
-                  <Field
-                    icon={InstagramLogo}
-                    label="Instagram (opcional)"
-                    htmlFor="instagram"
-                    error={errors.instagram?.message}
-                  >
-                    <input
-                      id="instagram"
-                      type="text"
-                      {...register("instagram")}
-                      className="w-full border-b border-line bg-transparent py-2 pl-6 text-base text-text outline-none transition-colors duration-200 focus:border-tinto placeholder:text-text-dimmer"
-                    />
-                  </Field>
-
-                  <div>
-                    <label
-                      htmlFor="sector"
-                      className="mb-2 block text-xs uppercase tracking-[0.1em] text-text-dimmer"
-                    >
-                      Sector / Tipo de empresa
-                    </label>
-                    <select
-                      id="sector"
-                      {...register("sector")}
-                      className="w-full border-b border-line bg-transparent py-2 text-base text-text outline-none transition-colors duration-200 focus:border-tinto"
-                    >
-                      {SECTORS.map((sector) => (
-                        <option key={sector} value={sector} className="bg-[#111113]">
-                          {sector}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.sector && (
-                      <p className="mt-1.5 text-xs text-red-400">
-                        {errors.sector.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="message"
-                      className="mb-2 block text-xs uppercase tracking-[0.1em] text-text-dimmer"
-                    >
-                      Mensaje / detalles del proyecto (opcional)
-                    </label>
-                    <textarea
-                      id="message"
-                      rows={4}
-                      {...register("message")}
-                      className="w-full resize-none border-b border-line bg-transparent py-2 text-base text-text outline-none transition-colors duration-200 focus:border-tinto"
-                    />
-                    {errors.message && (
-                      <p className="mt-1.5 text-xs text-red-400">
-                        {errors.message.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="consent"
-                      className="flex cursor-pointer items-start gap-3 text-xs leading-relaxed text-text-dim"
-                    >
-                      <input
-                        id="consent"
-                        type="checkbox"
-                        {...register("consent")}
-                        className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-line bg-transparent accent-tinto"
-                      />
-                      <span>
-                        He leído y acepto la{" "}
-                        <a
-                          href="/politica-de-privacidad"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-text underline decoration-line-strong underline-offset-2 transition-colors duration-200 hover:text-tinto"
-                        >
-                          Política de Privacidad
-                        </a>
-                        .
-                      </span>
-                    </label>
-                    {errors.consent && (
-                      <p className="mt-1.5 text-xs text-red-400">
-                        {errors.consent.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {status === "error" && (
-                    <div className="flex items-start gap-2 rounded-xl border border-red-400/30 bg-red-400/[0.06] px-4 py-3 text-xs text-red-300">
-                      <WarningCircle size={16} className="mt-0.5 shrink-0" />
-                      <span>{errorMessage}</span>
+                    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-tinto/10">
+                      <CheckCircle size={32} weight="fill" className="text-tinto" />
                     </div>
-                  )}
-
-                  <div className="flex justify-center">
-                    <SpecularButton
-                      type="submit"
-                      disabled={isSubmitting || status === "loading"}
-                      radius={999}
-                      lineColor="#ffffff"
-                      textColor="var(--text)"
-                      className={cn(
-                        "inline-flex w-fit items-center gap-2 rounded-full bg-tinto px-7 py-3.5 font-sora text-sm font-semibold text-text transition-transform duration-200 ease-out active:scale-[0.97] disabled:opacity-60"
-                      )}
+                    <h3 className="font-sora text-lg font-semibold text-text">
+                      ¡Mensaje enviado!
+                    </h3>
+                    <p className="mt-2 text-sm text-text-dim">
+                      Te responderemos en menos de 24-48h.
+                    </p>
+                  </motion.div>
+                ) : (
+                  <motion.form
+                    key="form"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="flex flex-col gap-6"
+                    noValidate
+                  >
+                    {/* Honeypot anti-bot: invisible y no enfocable para una persona
+                        real (no usa display:none, que algunos bots evitan), pero
+                        un bot que autorellena todos los inputs del formulario lo
+                        encuentra. Ver comprobación en /api/contact. */}
+                    <div
+                      aria-hidden="true"
+                      style={{
+                        position: "absolute",
+                        width: 1,
+                        height: 1,
+                        overflow: "hidden",
+                        clip: "rect(0 0 0 0)",
+                        whiteSpace: "nowrap",
+                      }}
                     >
-                      {status === "loading" ? "Enviando..." : "Enviar mensaje"}
-                    </SpecularButton>
-                  </div>
-                </form>
-              </div>
-            </motion.div>
-          </div>
-        )}
+                      <label htmlFor="company">No rellenar este campo</label>
+                      <input
+                        id="company"
+                        name="company"
+                        type="text"
+                        tabIndex={-1}
+                        autoComplete="off"
+                      />
+                    </div>
 
-        {isOpen && status === "success" && (
-          <motion.div
-            key="success-modal"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-[120] flex items-center justify-center p-4"
-          >
-            <div
-              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-              onClick={handleClose}
-            />
-            <motion.div
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="success-modal-title"
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-full max-w-sm rounded-2xl border border-line bg-[#111113] p-8 text-center shadow-[0_0_60px_rgba(0,0,0,0.5)]"
-            >
-              <button
-                type="button"
-                aria-label="Cerrar"
-                onClick={handleClose}
-                className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-text-dimmer transition-colors duration-200 hover:bg-white/10 hover:text-text"
-              >
-                <X size={16} />
-              </button>
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-tinto/10">
-                <CheckCircle size={32} weight="fill" className="text-tinto" />
-              </div>
-              <h3
-                id="success-modal-title"
-                className="font-sora text-lg font-semibold text-text"
-              >
-                ¡Mensaje enviado!
-              </h3>
-              <p className="mt-2 text-sm text-text-dim">
-                Te responderemos en menos de 24-48h.
-              </p>
-            </motion.div>
+                    <Field icon={User} label="Nombre completo" htmlFor="name" error={errors.name?.message}>
+                      <input
+                        id="name"
+                        type="text"
+                        {...register("name")}
+                        className="w-full border-b border-line bg-transparent py-2 pl-6 text-base text-text outline-none transition-colors duration-200 focus:border-tinto"
+                      />
+                    </Field>
+
+                    <div className="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-2">
+                      <Field icon={EnvelopeSimple} label="Email" htmlFor="email" error={errors.email?.message}>
+                        <input
+                          id="email"
+                          type="email"
+                          {...register("email")}
+                          className="w-full border-b border-line bg-transparent py-2 pl-6 text-base text-text outline-none transition-colors duration-200 focus:border-tinto"
+                        />
+                      </Field>
+
+                      <Field icon={Phone} label="Teléfono" htmlFor="phone" error={errors.phone?.message}>
+                        <input
+                          id="phone"
+                          type="tel"
+                          {...register("phone")}
+                          className="w-full border-b border-line bg-transparent py-2 pl-6 text-base text-text outline-none transition-colors duration-200 focus:border-tinto"
+                        />
+                      </Field>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-2">
+                      <Field
+                        icon={InstagramLogo}
+                        label="Instagram (opcional)"
+                        htmlFor="instagram"
+                        error={errors.instagram?.message}
+                      >
+                        <input
+                          id="instagram"
+                          type="text"
+                          {...register("instagram")}
+                          className="w-full border-b border-line bg-transparent py-2 pl-6 text-base text-text outline-none transition-colors duration-200 focus:border-tinto placeholder:text-text-dimmer"
+                        />
+                      </Field>
+
+                      <div>
+                        <label
+                          htmlFor="sector"
+                          className="mb-2 block text-xs uppercase tracking-[0.1em] text-text-dimmer"
+                        >
+                          Sector / Tipo de empresa
+                        </label>
+                        <select
+                          id="sector"
+                          {...register("sector")}
+                          className="w-full border-b border-line bg-transparent py-2 text-base text-text outline-none transition-colors duration-200 focus:border-tinto"
+                        >
+                          {SECTORS.map((sector) => (
+                            <option key={sector} value={sector} className="bg-[#111113]">
+                              {sector}
+                            </option>
+                          ))}
+                        </select>
+                        {errors.sector && (
+                          <p className="mt-1.5 text-xs text-red-400">
+                            {errors.sector.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="message"
+                        className="mb-2 block text-xs uppercase tracking-[0.1em] text-text-dimmer"
+                      >
+                        Mensaje / detalles del proyecto (opcional)
+                      </label>
+                      <textarea
+                        id="message"
+                        rows={4}
+                        {...register("message")}
+                        className="w-full resize-none border-b border-line bg-transparent py-2 text-base text-text outline-none transition-colors duration-200 focus:border-tinto"
+                      />
+                      {errors.message && (
+                        <p className="mt-1.5 text-xs text-red-400">
+                          {errors.message.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="consent"
+                        className="flex cursor-pointer items-start gap-3 text-xs leading-relaxed text-text-dim"
+                      >
+                        <input
+                          id="consent"
+                          type="checkbox"
+                          {...register("consent")}
+                          className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-line bg-transparent accent-tinto"
+                        />
+                        <span>
+                          He leído y acepto la{" "}
+                          <a
+                            href="/politica-de-privacidad"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-text underline decoration-line-strong underline-offset-2 transition-colors duration-200 hover:text-tinto"
+                          >
+                            Política de Privacidad
+                          </a>
+                          .
+                        </span>
+                      </label>
+                      {errors.consent && (
+                        <p className="mt-1.5 text-xs text-red-400">
+                          {errors.consent.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {status === "error" && (
+                      <div className="flex items-start gap-2 rounded-xl border border-red-400/30 bg-red-400/[0.06] px-4 py-3 text-xs text-red-300">
+                        <WarningCircle size={16} className="mt-0.5 shrink-0" />
+                        <span>{errorMessage}</span>
+                      </div>
+                    )}
+
+                    <div className="flex justify-center">
+                      <SpecularButton
+                        type="submit"
+                        disabled={isSubmitting || status === "loading"}
+                        radius={999}
+                        lineColor="#ffffff"
+                        textColor="var(--text)"
+                        className={cn(
+                          "inline-flex w-fit items-center gap-2 rounded-full bg-tinto px-7 py-3.5 font-sora text-sm font-semibold text-text transition-transform duration-200 ease-out active:scale-[0.97] disabled:opacity-60"
+                        )}
+                      >
+                        {status === "loading" ? "Enviando..." : "Enviar mensaje"}
+                      </SpecularButton>
+                    </div>
+                  </motion.form>
+                )}
+              </AnimatePresence>
+            </div>
           </motion.div>
-        )}
-      </AnimatePresence>,
+        </div>
+      )}
+    </AnimatePresence>,
     document.body
   );
 }

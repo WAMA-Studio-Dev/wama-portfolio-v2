@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
 import { Sora, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
-import ContactDrawer from "@/components/ContactDrawer";
+import dynamic from "next/dynamic";
 import CookieConsent from "@/components/CookieConsent";
 import GoogleAnalyticsGate from "@/components/GoogleAnalyticsGate";
 import GlobalStarfield from "@/components/GlobalStarfield";
 import { ContactDrawerProvider } from "@/lib/contact-drawer-context";
 import { CookieConsentProvider } from "@/lib/cookie-consent-context";
 import "./globals.css";
+
+// react-hook-form + zod + los iconos del formulario no hacen falta hasta
+// que el usuario abre el modal de contacto, así que van en su propio chunk
+// separado del bundle inicial. (`ssr: false` no se puede usar aquí — este
+// layout es un Server Component — pero no hace falta: ContactDrawer ya se
+// renderiza a `null` en servidor mediante su propio chequeo de montaje.)
+const ContactDrawer = dynamic(() => import("@/components/ContactDrawer"));
 
 const sora = Sora({
   variable: "--font-sora",
