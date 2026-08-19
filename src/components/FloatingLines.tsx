@@ -537,8 +537,19 @@ export default function FloatingLines({
       }
 
       let raf = 0;
+      // Fuera de vista (scroll en móvil, sobre todo) se pausa el bucle de
+      // render para no gastar batería/GPU, pero sin tocar el
+      // WebGLRenderer/escena — el contexto sigue vivo y se reanuda sin
+      // recrear nada al volver a estar visible.
+      let isVisible = true;
+      let contextLost = false;
+      const shouldRun = () => active && isVisible && !contextLost;
+
       const renderLoop = () => {
-        if (!active) return;
+        if (!shouldRun()) {
+          raf = 0;
+          return;
+        }
 
         uniforms.iTime.value = getElapsedTime();
 
@@ -563,13 +574,75 @@ export default function FloatingLines({
         renderer.render(scene, camera);
         raf = requestAnimationFrame(renderLoop);
       };
-      renderLoop();
+      const startLoop = () => {
+        if (raf || !shouldRun()) return;
+        raf = requestAnimationFrame(renderLoop);
+      };
+      const stopLoop = () => {
+        if (!raf) return;
+        cancelAnimationFrame(raf);
+        raf = 0;
+      };
+      startLoop();
+
+      const visibilityObserver =
+        typeof IntersectionObserver !== "undefined"
+          ? new IntersectionObserver(
+              ([entry]) => {
+                isVisible = entry.isIntersecting;
+                if (isVisible) {
+                  startLoop();
+                } else {
+                  stopLoop();
+                }
+              },
+              { rootMargin: "200px 0px 200px 0px" },
+            )
+          : null;
+      visibilityObserver?.observe(container);
+
+      // Bajo presión de memoria de GPU (habitual en móvil con varios
+      // contextos WebGL vivos a la vez en la página) el navegador puede
+      // descartar este contexto sin avisar salvo por este evento; sin
+      // manejarlo, el renderer sigue "renderizando" sobre un contexto
+      // muerto y el canvas se queda en blanco para siempre.
+      // preventDefault() habilita la recuperación: three.js re-sube los
+      // recursos GPU automáticamente en el siguiente render() mientras se
+      // reutilicen la misma escena/malla (no se recrean aquí).
+      const handleContextLost = (event: Event) => {
+        event.preventDefault();
+        contextLost = true;
+        stopLoop();
+      };
+      const handleContextRestored = () => {
+        contextLost = false;
+        startLoop();
+      };
+      renderer.domElement.addEventListener(
+        "webglcontextlost",
+        handleContextLost,
+        false,
+      );
+      renderer.domElement.addEventListener(
+        "webglcontextrestored",
+        handleContextRestored,
+        false,
+      );
 
       return () => {
-        cancelAnimationFrame(raf);
+        stopLoop();
         if (pointerMoveRaf) cancelAnimationFrame(pointerMoveRaf);
 
         if (ro) ro.disconnect();
+        visibilityObserver?.disconnect();
+        renderer.domElement.removeEventListener(
+          "webglcontextlost",
+          handleContextLost,
+        );
+        renderer.domElement.removeEventListener(
+          "webglcontextrestored",
+          handleContextRestored,
+        );
 
         if (interactive) {
           window.removeEventListener("pointermove", handlePointerMove);
